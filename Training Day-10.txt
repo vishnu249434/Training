@@ -1,0 +1,214 @@
+1. CREATE A PROGRAM TO GIVE DIFFERENT COLORS TO DIFFERENT DEPARTMENTS USING SUBFILE AND RPGE FILE 
+
+
+Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 SFLCLRR 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0002.00 FEMPLOYEE9 IF   E           K DISK                                      
+0003.00 FSFLCLRD   CF   E             WORKSTN SFILE(EMPSFL:RRN)                 
+0004.00 DRRN              S              3P 0 INZ(0)                            
+0005.00 C** CLEAR SUBFILE                                                       
+0006.00 C                   EVAL      *IN73=*ON                                 
+0007.00 C                   WRITE     EMPCTL                                    
+0008.00 C                   EVAL      RRN=0                                     
+0009.00 C                   EVAL      *IN73=*OFF                                
+0010.00 C** FILL SUBFILE                                                        
+0011.00 C     *LOVAL        SETLL     EMPREC                                    
+0012.00 C                   READ      EMPREC                                    
+0013.00 C                   DOW       NOT %EOF                                  
+0013.01 C                   MOVEA     '0000'        *IN(41)                     
+0014.00 C                   SELECT                                              
+0015.00 C                   WHEN      DEPT=10                                   
+0016.00 C                   EVAL      *IN41=*ON   
+0017.00 C                   WHEN      DEPT=20              
+0018.00 C                   EVAL      *IN42=*ON            
+0019.00 C                   WHEN      DEPT=30              
+0020.00 C                   EVAL      *IN43=*ON            
+0021.00 C                   WHEN      DEPT=40              
+0022.00 C                   EVAL      *IN44=*ON            
+0023.00 C                   ENDSL                          
+0024.00 C                   EVAL      RRN+=1               
+0025.00 C                   WRITE     EMPSFL               
+0026.00 C                   READ      EMPREC      
+0027.00 C                   ENDDO                 
+0027.01 C** DISPLAY/EXECUTE THE SUBFILE...        
+0028.00 C                   EVAL      *IN71=*ON   
+0029.00 C                   EVAL      *IN72=*ON   
+0030.00 C                   DOW       NOT *IN03   
+0030.01 C                   WRITE     FOOTER      
+0031.00 C                   EXFMT     EMPCTL      
+0032.00 C                   ENDDO                                                                   
+0033.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+
+OUTPUT:
+
+                                 DEPT IN COLORS                      8/03/23    
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+    EMP-ID              NAME                  DEPT              SALARY          
+                                                                                
+    000023      ANIJA                          20                 3,400.00      
+    000102      AKHILA                         10                   300.00      
+    000104      BASIL                          10                   400.00      
+    000105      AMMU                           10                   500.00      
+    000401      KAVYA SURESH                   40                40,000.00      
+    000402      AJITH S                        40                23,000.00      
+    000403      VEENA MENON                    40                63,000.00      
+    000404      SUZANA SANTOSH                 40                44,000.00      
+
+
+2. WRITE A PROGRAM TO FIND ODD OR EVEN USING FUNCTION REM
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                ODDEVENR 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FODDEVEND  CF   E             WORKSTN                                   
+0001.01 C                   DOW       *IN03=*OFF                                
+0002.00 C                   EXFMT     SCR                                       
+0003.00 C   03              LEAVE                                               
+0004.00 C                   IF        %REM(NUM:2)=1                             
+0005.00 C                   EVAL      RESULT='ODD'                              
+0006.00 C                   ELSE                                                
+0007.00 C                   EVAL      RESULT='EVEN'                             
+0008.00 C                   ENDIF                                               
+0009.00 C                   ENDDO                                               
+0010.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+                                                                                
+                                                                                
+   OUTPUT
+                   
+                                  
+        NUMBER :    1                                      
+                                  
+        ODD                                                                 
+                                  
+     F3=EXIT                      
+                                  
+                                  
+ 3. WRITE A SIMPLE PROGRAM USING TRIM FUNCTION
+
+
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FTRIMD     CF   E             WORKSTN                                   
+0002.00 C                   DOW       *IN03=*OFF                                
+0003.00 C                   EXFMT     SCR                                       
+0004.00 C                   EVAL      RESULT=%TRIM(NAME)+' '+%TRIM(ST)+' '+%TRIM(ST)+' '+%TRIM(CT) 
+0005.00 C                   ENDDO                                               
+0006.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data ****************************************                                                                                                               
+
+  OUTPUT
+
+                              
+ NAME :  VISHNU             
+                              
+ STATE : KERALA         
+                              
+ CITY :  TVM              
+                                     
+                              
+                   VISHNU KERALA TVM      
+                                       
+                              
+  F3=EXIT                     
+                                                                                                            
+                                                                            
+4. WRITE A PROGRAM TO SEARCH PARTICULAR USER TO GET BANK TRANSACTION DETAILS USING READC AND WINDOW SUBFILE.
+
+
+ FMT C  CL0N01Factor1+++++++Opcode&ExtFactor2+++++++Result++++++++Len++D+HiL
+0005.04 C                   WRITE     FOOTER                                
+0005.05 C                   EXFMT     TRNENT                                
+0006.00 C   03              LEAVE                                           
+0007.00 C   01              EXSR      SHOWSFL                               
+0008.00 C     ACNO          CHAIN     MSTREC                                
+0009.00 C                   IF        NOT %FOUND                            
+0010.00 C                   EVAL      MSG='INVALID A/C NO.'                 
+0011.00 C                   ITER                                            
+0012.00 C                   ENDIF                                           
+0013.00 C                   IF        TRNTYPE='CR'                          
+0014.00 C                   EVAL      NEWBAL=BALANCE+TRNAMT                 
+0015.00 C                   ENDIF                                           
+0016.00 C                   IF        TRNTYPE='DR'                          
+0017.00 C                   EVAL      NEWBAL=BALANCE-TRNAMT                 
+0018.00 C                   ENDIF                                           
+0018.01 C** SAVE TRANSACTION.........>                                      
+0019.00 C                   IF        *IN04                                 
+0020.00 C                   IF        TRNTYPE='DR' AND NEWBAL<0         
+0021.00 C                   EVAL      MSG='INSUFFICIENT BALANCE IN A/C' 
+0022.00 C                   ENDIF                                       
+0023.00 C                   EVAL      BALANCE=NEWBAL                    
+0024.00 C                   WRITE     TRNREC                            
+0025.00 C                   UPDATE    MSTREC                            
+0026.00 C                   CLEAR                   TRNENT              
+0027.00 C                   ENDIF                                       
+0027.01 C                   IF        *IN12                                                             
+0028.00 C                   CLEAR                   TRNENT      
+0029.00 C                   ENDIF                               
+0030.00 C                   ENDDO                               
+0031.00 C                   EVAL      *INLR=*ON                 
+0032.00 C** FILL SUBFILE BELOW                                  
+0033.00 C** IT'S A SUBROUTINE                                   
+0034.00 C     FILLSFL       BEGSR                               
+0035.00 C                   EVAL      *IN73=*ON                 
+0036.00 C                   WRITE     MSTCTL                    
+0037.00 C                   EVAL      RRN=0      
+0038.00 C     *LOVAL        SETLL     MSTREC     
+0039.00 C                   READ      MSTREC     
+0040.00 C                   DOW       NOT %EOF   
+0041.00 C                   EVAL      OPT=*BLANK 
+0042.00 C                   EVAL      RRN+=1     
+0043.00 C                   WRITE     MSTSFL     
+0044.00 C                   READ      MSTREC     
+0045.00 C                   ENDDO                
+0046.00 C                   MOVEA     '010'         *IN(71)                  
+0047.00 C                   IF        RRN>0                                  
+0048.00 C                   MOVEA     '110'         *IN(71)                  
+0049.00 C                   ENDIF                                            
+0050.00 C                   ENDSR                                            
+0051.00 C     SHOWSFL       BEGSR                                            
+0051.01 C** EXECUTE/DISPLAY THE MASTER A/C LIST                              
+0051.02 C** READC READS THAT RECORD FROM SFL WHICH HAS CHANGED DURING EXFMT  
+0052.00 C                   EXFMT     MSTCTL   
+0053.00 C                   READC     MSTSFL                                    
+0054.00 C                   IF        NOT %EOF                                  
+0055.00 C                   EVAL      OPT=*BLANK                                
+0056.00 C                   UPDATE    MSTSFL                                    
+0057.00 C                   ENDIF                                               
+0058.00 C                   ENDSR                                               
+        ****************** End of data **************************************** 
+                                                                                
+
+OUTPUT
+
+
+ TEN26                    BANK TRANSACTION ENTRY                8/03/23    
+                                                               17:16:34    
+                                                                           
+                 SLIPNO:       ............................................
+                   ACNO:       :                                          :
+                   NAME:  MANI :  1=SELECT                                :
+                  DTTRN:  01.0 :  OPT    ACNO         NAME                :
+                TRNTYPE:       :       00000001   MANI                    :
+                TRNMODE:       :       00000002   NISHATH                 :
+                 TRNAMT:       :       00000003   VISHNU                  :
+                               :       00000004   KARTHIKA                :
+                               :       00000005   MANEESHA                :
+                               :                                          :
+                               :                                          :
+                               :..........................................:
+                                                                                                                                                                                                                                
+                                                                           
+                                                                           
+     F1=A/C LIST      F3=EXIT    F4=SAVE       F12=CANCEL                  
+                                                                           
+
+                                                                                              	                                    
