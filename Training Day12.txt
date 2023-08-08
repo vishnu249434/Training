@@ -1,0 +1,193 @@
+1. Write a program to get the age in days and use ADDDUR and SUBDUR to current date.
+
+
+ FMT H  HKeywords++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0000.01 HDATFMT(*EUR)                                                           
+0001.00 DTODAY            S               D   DATFMT(*EUR) INZ(*SYS)            
+0002.00 DVISHNU           S               D   DATFMT(*EUR) INZ(D'27.04.1998')   
+0003.00 DAGEYEAR          S              3P 0                                   
+0004.00 DAGEDAYS          S              5P 0                                   
+0004.01 DDT               S               D                                     
+0005.00 C                   EVAL      AGEYEAR=%DIFF(TODAY:VISHNU:*Y)             
+0006.00 C                   EVAL      AGEDAYS=%DIFF(TODAY:VISHNU:*D)             
+0007.00 C     AGEYEAR       DSPLY                                               
+0008.00 C     AGEDAYS       DSPLY                                               
+0008.01 C     TODAY         ADDDUR    90:*D         DT                          
+0008.02 C     DT            DSPLY                                               
+0008.03 C     TODAY         SUBDUR    5:*Y          DT                          
+0008.04 C     DT            DSPLY                                               
+0009.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+
+2. Program to get familiarise built in functions for numeric conversion
+
+
+
+ FMT D  DName+++++++++++ETDsFrom+++To/L+++IDc.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 DCH               S              8A   INZ('12345.67')                   
+0002.00 DPK               S              7P 0                                   
+0003.00 DIN               S              5I 0                                   
+0004.00 DUN               S              5U 0                                   
+0005.00 DFL               S              4F                                     
+0006.00 C                   EVAL      PK=%DEC(CH:7:0)                           
+0007.00 C** %DEC FUNC CONVERTS ANY NUMERIC & CHAR TYPE TO PAKED DECIMAL         
+0008.00 C     PK            DSPLY                                               
+0009.00 C                   EVAL      PK=%DECH(CH:7:0)                          
+0010.00 C     PK            DSPLY                                               
+0010.01 C                   EVAL      IN=%INT(CH)                               
+0010.02 C     IN            DSPLY                                               
+0010.03 C                   EVAL      IN=%INTH(CH)                              
+0010.04 C     IN            DSPLY                                               
+0010.05 C                   EVAL      UN=%UNS(CH)                               
+0010.06 C     UN            DSPLY                                               
+0010.07 C                   EVAL      UN=%UNSH(CH)                              
+0010.08 C     UN            DSPLY                                               
+0010.09 C                   EVAL      FL=%FLOAT(CH)                             
+0010.10 C     FL            DSPLY                                               
+0011.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+                                                                                
+
+
+3. Program to get familiarise built in string  functions
+
+
+
+ FMT D  DName+++++++++++ETDsFrom+++To/L+++IDc.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 DITEM             S              8A   INZ('COMPUTER')                   
+0001.01 DITEM1            S              9A   INZ('MALAYALAM')                  
+0001.02 DITEM2            S              4A   INZ('ALAM')                       
+0002.00 DSTR              S              3A   INZ('XYZ')                        
+0003.00 DNEWITEM          S              9A                                     
+0003.01 DTOTAL            S              9P 0                                   
+0004.00 DLWR              C                   CONST('abcdefghijklmnopqrstuvwxyz 
+0004.01 dUPR              C                   CONST('ABCDEFGHIJKLMNOPQRSTUVWXYZ 
+0004.02 DMSG              S              9A                                     
+0005.00 C                   EVAL      NEWITEM=%REPLACE(STR:ITEM:4:3)            
+0006.00 C     NEWITEM       DSPLY                                               
+0006.01 C                   EVAL      NEWITEM=%XLATE(UPR:LWR:ITEM)              
+0006.02 C     NEWITEM       DSPLY                                               
+0006.03 C** EXTRACTING PUT FROM COMPUTER USING SUBST                            
+0006.04 C                   EVAL      NEWITEM=%SUBST(ITEM:4:3)                  
+0006.05 C     NEWITEM       DSPLY  
+0006.07 C                   EVAL      TOTAL=%SCAN(ITEM2:ITEM1)                  
+0006.08 C                   IF        TOTAL>0                                   
+0006.09 C                   EVAL      MSG='FOUND'                               
+0006.12 C                   ELSE                                                
+0006.13 C                   EVAL      MSG='NOT FOUND'                           
+0006.14 C                   ENDIF                                               
+0006.15 C     MSG           DSPLY                                               
+0007.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+
+
+4. program to familiarise in pre-runtime array
+
+
+
+ FMT F  FFilename++IPEASFRlen+LKlen+AIDevice+.Keywords++++++++++++++++++++++++
+        *************** Beginning of data ************************************
+0001.00 FSTORE     IT   F   33        DISK                                    
+0002.00 F                                                                     
+0003.00 DSTOREARY         S             33A   DIM(5) FROMFILE(STORE) PERRCD(1)
+0004.00 DSTOREDS          DS                                                  
+0004.01 D** DATA STRUCTURE IS COLLECTION OF VARIOUS TYPES OF DATA ITEMS       
+0004.02 D** DATA ITEMS IN DS ARE CALLED AS SUBFILEDS                          
+0004.03 D** DS DOES NOT HAVE DATA TYPE/LENGTH                                 
+0004.04 D** SUBFIELDS DECLARATION TYPE IS BLANK                               
+0005.00 DIC                              6A                                   
+0006.00 DNM                             20A                                   
+0007.00 DPC                              7S 2                                 
+0007.01 C** MOVING 1 ELEMENT OF ARRAY TO DATA STRUCTURE                       
+0007.02 C** IT GETS SPLITED INTO SUBFEILD                                     
+0008.00 C                   MOVE      STOREARY(3)   STOREDS                   
+0009.00 C     IC            DSPLY                                             
+0010.00 C     NM            DSPLY   
+0011.00 C     PC            DSPLY                                               
+0012.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+                                                                                                                          
+
+ 5. Next write a program to update record on a pf without using strdfu
+
+
+ FMT F  FFilename++IPEASFRlen+LKlen+AIDevice+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FSTORE     CT   F   33        DISK                                      
+0003.00 DSTOREARY         S             33A   DIM(5) FROMFILE(STORE) PERRCD(1)  
+0003.01 D                                     TOFILE(STORE)                     
+0004.00 DSTOREDS          DS                                                    
+0004.01 D** DATA STRUCTURE IS COLLECTION OF VARIOUS TYPES OF DATA ITEMS         
+0004.02 D** DATA ITEMS IN DS ARE CALLED AS SUBFILEDS                            
+0004.03 D** DS DOES NOT HAVE DATA TYPE/LENGTH                                   
+0004.04 D** SUBFIELDS DECLARATION TYPE IS BLANK                                 
+0005.00 DIC                              6A                                     
+0006.00 DNM                             20A                                     
+0007.00 DPC                              7S 2                                   
+0007.01 C** MOVING 1 ELEMENT OF ARRAY TO DATA STRUCTURE                         
+0007.02 C** IT GETS SPLITED INTO SUBFEILD                                       
+0008.00 C                   MOVE      STOREARY(3)   STOREDS                     
+0009.00 C     IC            DSPLY                                               
+0010.00 C     NM            DSPLY     
+0011.00 C     PC            DSPLY                                               
+0011.01 C                   EVAL      NM='LAPTOP'                               
+0011.02 C                   MOVE      STOREDS       STOREARY(3)                 
+0012.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+                                                                                                                          
+
+6. Write a RPGLE program to generate a report layout of total salary of each department
+and grand total of all salaries from each dept and also find the maximum salary.
+
+
+
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FEMPLOYEE8 IF   E           K DISK                                      
+0002.00 FDEPTSALR  O    E             PRINTER OFLIND(*IN95)                     
+0003.00 C                   WRITE     HEAD1                                     
+0004.00 C                   WRITE     HEAD2                                     
+0005.00 C     *LOVAL        SETLL     EMPREC                                    
+0006.00 C                   READ      EMPREC                                    
+0007.00 C                   EVAL      TMPDEPT=DEPT                              
+0007.01 C** ASSUMING 1ST DEPT HAS MAXIMUM SALARY                                
+0007.02 C                   EVAL      DEPTMAX=SALARY                            
+0007.03 C                   EVAL      TOTMAX=SALARY                             
+0008.00 C** STORE 1ST EMP DEPT CODE IN VARIABLE & COMP IT WITH NEXT ONWARD      
+0009.00 C** WHEN NON-EQUAL VALUE FOUND THE CURRENT GROUP IS OVER                
+0010.00 C                   DOW       NOT %EOF                                  
+0011.00 C                   EVAL      DEPTSAL+=SALARY                           
+0013.00 C                   WRITE     DETAIL                                    
+0014.00 C   95              WRITE     HEAD1             
+0015.00 C   95              WRITE     HEAD2                             
+0016.00 C                   EVAL      *IN95=*OFF                        
+0017.00 C                   READ      EMPREC                            
+0018.00 C                   IF        DEPT<>TMPDEPT OR %EOF             
+0019.00 C                   WRITE     SUM1                              
+0020.00 C                   WRITE     SUM2                              
+0021.00 C                   WRITE     SUM3                              
+0022.00 C                   EVAL      TOTSAL=DEPTSAL                    
+0022.01 C** FIRST EMPLOYEE OF THE 2ND DEPT IS STORED IN TMPDEPT BELOW 
+0023.00 C                   EVAL      TMPDEPT=DEPT                              
+0024.00 C                   EVAL      DEPTSAL=0                                 
+0025.00 C** IF 1ST EMPLOYEE SALARY IS GREATER THAN SO FAR MAX OF THE SALARY     
+0025.01 C** BELOW LOOP WILL WORK WHEN DEPT = TMPDEPT(DEPT ONE IS IN LOOP)       
+0026.00 C                   ELSE                                                
+0027.00 C                   IF        SALARY>DEPTMAX                            
+0028.00 C                   EVAL      DEPTMAX=SALARY                            
+0029.00 C                   ENDIF                                               
+0030.00 C                   ENDIF                                               
+0031.00 C                   ENDDO                                               
+0032.00 C                   WRITE     GRD1                                      
+0033.00 C                   WRITE     GRD2                                      
+0034.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+                                                                                  
+                                                                                                
+                                                                                
+
+
+                                                                                                                            

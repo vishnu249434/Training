@@ -1,0 +1,81 @@
+1. Write a program to display a screen that accepts the department code and then copies employees of selected department only to another file? 
+
+
+
+FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FEMPLOYEE IF   E           K DISK                                      
+0002.00 FEMPL8    O    E           K DISK                                      
+0002.01 FASSD      CF   E             WORKSTN                                   
+0003.00 DQDEPT            S              2P 0 INZ(30)                           
+0007.00 C                   EXFMT     SCR                                       
+0010.00 C     QDEPT         SETLL     EMPREC                                    
+0011.00 C     QDEPT         READE     EMPREC                                    
+0012.00 C                   DOW       NOT %EOF                                  
+0014.01 C                   WRITE     EMPREC1                                   
+0015.00 C                   READE     EMPREC                                    
+0016.00 C                   ENDDO                                               
+0017.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+ 
+
+2. Write a program to display a subfile/records of physical file. Odd row should be in blue color, even row should be in yellow color.
+
+
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0002.00 FEMPLOYEE  IF   E           K DISK                                      
+0003.00 FEVODDD    CF   E             WORKSTN SFILE(EMPSFL:RRN)                 
+0004.00 DRRN              S              3P 0 INZ(0)                            
+0005.00 C** CLEAR SUBFILE                                                       
+0006.00 C                   EVAL      *IN73=*ON                                 
+0007.00 C                   WRITE     EMPCTL                                    
+0008.00 C                   EVAL      RRN=0                                     
+0009.00 C                   EVAL      *IN73=*OFF                                
+0010.00 C** FILL SUBFILE                                                        
+0011.00 C     *LOVAL        SETLL     EMPREC                                    
+0012.00 C                   READ      EMPREC                                    
+0013.00 C                   DOW       NOT %EOF                                  
+0013.01 C                   MOVEA     '0000'        *IN(41)                     
+0015.00 C                   IF        %REM(RRN:2)=1                             
+0016.00 C                   EVAL      *IN41=*ON                                 
+0017.00 C                   ELSE                                                
+0018.00 C                   EVAL      *IN45=*ON 
+0023.00 C                   ENDIF               
+0024.00 C                   EVAL      RRN+=1    
+0025.00 C                   WRITE     EMPSFL    
+0026.00 C                   READ      EMPREC    
+0027.00 C                   ENDDO               
+0027.01 C** DISPLAY/EXECUTE THE SUBFILE...      
+0028.00 C                   EVAL      *IN71=*ON 
+0029.00 C                   EVAL      *IN72=*ON 
+0030.00 C                   DOW       NOT *IN03                                 
+0030.01 C                   WRITE     FOOTER                                    
+0031.00 C                   EXFMT     EMPCTL                                    
+0032.00 C                   ENDDO                                               
+0033.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+                                                                                                                                                         
