@@ -1,0 +1,267 @@
+1.CL program for the addition of two number
+
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 
+        *************** Beginning of data *************************************
+0001.00 PGM                                                                    
+0002.00              DCL        VAR(&A) TYPE(*DEC) LEN(3 0) VALUE(150)         
+0003.00              DCL        VAR(&B) TYPE(*DEC) LEN(3 0) VALUE(200)         
+0004.00              DCL        VAR(&C) TYPE(*DEC) LEN(5 0) VALUE(0)           
+0005.00              DCL        VAR(&CH) TYPE(*CHAR) LEN(5)                    
+0006.00              CHGVAR     VAR(&C) VALUE(&A + &B)                         
+0007.00              CHGVAR VAR(&CH) VALUE(&C)                                 
+0008.00              SNDPGMMSG  MSG('THE SUM' *BCAT &CH)                       
+0009.00 ENDPGM                                                                 
+        ****************** End of data ****************************************
+
+2.Program to count vowels in a given name.
+
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 
+        *************** Beginning of data ***********************************
+0001.00   PGM PARM(&NM)                                                      
+0002.00     DCL VAR(&NM) TYPE(*CHAR) LEN(20)                                 
+0003.00     DCL VAR(&CH) TYPE(*CHAR) LEN(1) /* TO STORE 1 CHARACTER FROM NAME
+0004.00     DCL VAR(&POS) TYPE(*DEC) LEN(2 0) VALUE(1)                       
+0005.00     DCL VAR(&CNT) TYPE(*DEC) LEN(2 0)                                
+0006.00     DCL VAR(&CHCNT) TYPE(*CHAR) LEN(2)                               
+0007.00                 DOWHILE    COND(&POS < 20)                           
+0008.00                 CHGVAR VAR(&CH) VALUE(%SST(&NM &POS 1))              
+0009.00              IF         COND(&CH = 'A' *OR &CH = 'E' *OR &CH = 'I' + 
+0010.00                           *OR &CH = 'O' *OR &CH = 'U') THEN(CHGVAR + 
+0011.00                           VAR(&CNT) VALUE(&CNT + 1))                 
+0012.00              CHGVAR VAR(&POS) VALUE(&POS + 1)                        
+0013.00              ENDDO                                                   
+0014.00              CHGVAR VAR(&CHCNT) VALUE(&CNT)                          
+0015.00              SNDPGMMSG  MSG('TOTAL VOWELS IN YOUR NAME ARE ' *BCAT + 
+0016.00                           &CHCNT)                                    
+0017.00   ENDPGM                                                              
+        ****************** End of data ***************************************                                                                            
+
+3.Program  to revert a given name.
+
+ SEU==>                                                                  REVERT 
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7  
+        *************** Beginning of data ************************************* 
+0001.00 PGM PARM(&NM)                                                           
+0002.00    DCL VAR(&NM) TYPE(*CHAR) LEN(20)                                     
+0003.00    DCL VAR(&CH) TYPE(*CHAR) LEN(1)                                      
+0004.00    DCL VAR(&RV) TYPE(*CHAR) LEN(20)                                     
+0005.00    DCL VAR(&POS) TYPE(*DEC) LEN(2 0) VALUE(20)                          
+0006.00    DOWHILE COND(&POS > 0)                                               
+0007.00    CHGVAR VAR(&CH) VALUE(%SST(&NM &POS 1))                              
+0008.00    CHGVAR VAR(&RV) VALUE(&RV *TCAT &CH)                                 
+0009.00    CHGVAR VAR(&POS) VALUE(&POS - 1)                                     
+0010.00    ENDDO                                                                
+0011.00    SNDPGMMSG MSG(&NM *BCAT 'REVERTED AS ' *BCAT &RV)                    
+0012.00    ENDPGM                                                               
+        ****************** End of data **************************************** 
+
+4.Speed calculation
+
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...
+        *************** Beginning of data ******************************
+0001.00 PGM                                                             
+0002.00    DCL VAR(&H) TYPE(*DEC) LEN(3) VALUE(1)                       
+0003.00    DCL VAR(&P) TYPE(*DEC) LEN(3) VALUE(1)                       
+0004.00    DCL VAR(&T) TYPE(*DEC) LEN(3) VALUE(10)                      
+0004.01    DCL VAR(&CP) TYPE(*CHAR) LEN(3)                              
+0004.02    DOWHILE  (&T > &P)                                           
+0006.00    CHGVAR VAR(&H) VALUE(&H + 1)                                 
+0007.00    CHGVAR VAR(&P) VALUE(&P + &H)                                
+0008.00    CHGVAR VAR(&T) VALUE(&T + 10)                                
+0009.00 ENDDO                                                           
+0010.00 CHGVAR VAR(&CP) VALUE(&P)                                       
+0011.00 SNDPGMMSG MSG('POLICE CAUGHT THEIF AFTER KMS' *BCAT &CP)        
+0012.00 ENDPGM                                                          
+        ****************** End of data *********************************
+
+5.Calculator using CLP
+
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+.
+        *************** Beginning of data ********************************
+0001.00 PGM                                                               
+0002.00              DCLF       FILE(*CURLIB/CALCD)                       
+0003.00              DOWHILE COND(&IN53='0')                              
+0004.00              SNDRCVF    RCDFMT(NUMENT)                            
+0005.00              IF COND(&IN53='1') THEN(LEAVE)                       
+0006.00              IF         COND(&OPT = 'A') THEN(CHGVAR VAR(&C) +    
+0007.00                           VALUE(&A + &B))                         
+0008.00              IF         COND(&OPT = 'S') THEN(CHGVAR VAR(&C) +    
+0009.00                           VALUE(&A - &B))                         
+0009.01              IF         COND(&OPT = 'M') THEN(CHGVAR VAR(&C) +    
+0009.02                           VALUE(&A * &B))                         
+0009.03              IF         COND(&OPT = 'D') THEN(CHGVAR VAR(&C) +    
+0009.04                           VALUE(&A / &B))                         
+0010.00              ENDDO                                                
+0011.00 ENDPGM                                                            
+        ****************** End of data ***********************************
+ 
+6.Application menu using CLP
+
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+.
+        *************** Beginning of data ********************************
+0001.00 PGM                                                               
+0002.00             DCLF        FILE(*CURLIB/MENUDSP)                     
+0003.00             DOWHILE COND(&IN03='0')                               
+0004.00             SNDRCVF    RCDFMT(MENUSCR)                            
+0005.00             IF COND(&IN03='1') THEN(LEAVE)                        
+0006.00              IF         COND(&OPT = '1') THEN(CALL +              
+0006.01                           PGM(TEN32LIB/EMPSFLR))                  
+0007.00              IF         COND(&OPT = '2') THEN(CALL +              
+0008.00                           PGM(TEN32LIB/EMPUPDR))                  
+0009.00              IF         COND(&OPT = '3') THEN(CALL +              
+0010.00                           PGM(TEN32LIB/DEPTQRYR))                 
+0011.00              IF         COND(&OPT = '4') THEN(CALL +              
+0012.00                           PGM(TEN32LIB/NAVIGATER))                
+0013.00              IF         COND(&OPT = '5') THEN(SBMJOB CMD(CALL +   
+0014.00                           PGM(TEN32LIB/SALREPOR)))                
+0015.00              ENDDO                                                
+0016.00 ENDPGM                                                            
+        ****************** End of data ***********************************  
+                                          
+7. Application	menu 
+
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 
+        *************** Beginning of data *************************************
+0001.00 PGM                                                                    
+0002.00              DCLF       FILE(MENU1DSP)                                 
+0003.00              DOWHILE COND(&IN03='0')                                   
+0004.00              SNDRCVF RCDFMT(MENUSCR)                                   
+0005.00              IF COND(&IN03 = '1') THEN(LEAVE)                          
+0005.01              IF         COND(&RTNFLD = 'M1') THEN(CALL +               
+0005.02                           PGM(TEN32LIB/PERSONR))                       
+0008.00              IF         COND(&RTNFLD = 'M2') THEN(CALL +               
+0009.00                           PGM(TEN32LIB/EMPURPDR))                      
+0010.00              IF         COND(&RTNFLD = 'M3') THEN(CALL +               
+0011.00                           PGM(TEN32LIB/DEPTQRYR))                      
+0012.00              IF         COND(&RTNFLD = 'M4') THEN(CALL +               
+0013.00                           PGM(TEN32LIB/NAVIGATER))                     
+0014.00              IF         COND(&RTNFLD = 'M5') THEN(SBMJOB CMD(CALL +    
+0015.00                           PGM(TEN32LIB/SALREPOR)))                     
+0016.00              ENDDO                                                     
+0017.00 ENDPGM                                                                  
+        ****************** End of data **************************************** 
+
+8.Voter eligibility using CLP
+
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7  
+        *************** Beginning of data ************************************* 
+0001.00 PGM                                                                     
+0002.00              DCLF       FILE(*CURLIB/VOTERD)                            
+0003.00              DOWHILE COND(&IN03='0')                                    
+0004.00              SNDRCVF    RCDFMT(ENTSCR)                                  
+0005.00              IF COND(&IN53='1') THEN(LEAVE)                             
+0008.00              IF COND(&AG>=18 *AND &NA='INDIAN') THEN(CHGVAR VAR(&MSG) + 
+0009.00                 VALUE('YOU CAN VOTE'))                                  
+0009.01              SNDPGMMSG MSG('YOU CAN VOTE')                              
+0009.02              IF COND(&AG < 18 *OR &NA *NE 'INDIAN') +                   
+0009.03                  THEN(CHGVAR VAR(&MSG) VALUE('YOU CANNOT VOTE'))        
+0009.05              SNDPGMMSG MSG('YOU CANNOT VOTE')                           
+0010.00              ENDDO                                                      
+0011.00 ENDPGM                                                                  
+        ****************** End of data **************************************** 
+
+9.Program to observe Open data path(ODP) not shared by default 
+
+ SEU==>                                                                 CALLED1
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++
+        *************** Beginning of data *************************************
+0001.00 FEMPMAIN   IF   E             DISK                                     
+0002.00 DRRN              S              3P 0 INZ(10)                          
+0003.00 C     RRN           CHAIN     EMPREC                                   
+0004.00 C     EMPID         DSPLY                                              
+0005.00 C                   EVAL      *INLR=*ON                                
+        ****************** End of data ****************************************  
+
+ SEU==>                                                                 CALLER1
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords++++++++++++++++++++++++
+        *************** Beginning of data ************************************
+0002.00 FEMPMAIN   IF   E             DISK                                    
+0002.01 C                   READ      EMPREC                                  
+0003.00 C     EMPID         DSPLY                                             
+0004.00 C                   CALL      'CALLED1'                               
+0005.00 C                   READ      EMPREC                                  
+0006.00 C     EMPID         DSPLY                                             
+0007.00 C                   EVAL      *INLR=*ON                               
+        ****************** End of data **************************************
+
+10. Shared ODP, observe with rec-pointer in RPGLE
+ SEU==>                                                                CALLERCL
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 
+        *************** Beginning of data *************************************
+0001.00 PGM                                                                    
+0002.00              OVRDBF     FILE(EMPMAIN) SHARE(*YES)                      
+0003.00              CALL       PGM(TEN32LIB/CALLER1)                          
+0004.00              DLTOVR     FILE(EMPMAIN)                                  
+0005.00 ENDPGM                                                                 
+        ****************** End of data ****************************************
+
+11.Query builder using OVRBDF & OPNQRYF    
+ SEU==>                                                                 QRYBLDC
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 
+        *************** Beginning of data *************************************
+0001.00 PGM                                                                    
+0002.00              DCLF       FILE(*CURLIB/QRYBLDD)                          
+0003.00              DCL VAR(&QRY) TYPE(*CHAR) LEN(50)                         
+0004.00              DCL VAR(&ORDER) TYPE(*CHAR) LEN(8) VALUE('*ASCEND')       
+0004.01              OVRDBF     FILE(EMPMAIN) SHARE(*YES)                      
+0005.00              DOWHILE COND(&IN03='0')                                   
+0006.00              SNDRCVF RCDFMT(QRYENT)                                    
+0006.01              IF COND(&IN03='1') THEN(LEAVE)                            
+0007.00              IF COND(&IN04='1') THEN(DO)                               
+0008.00              CHGVAR VAR(&QRY) VALUE(&FLD *BCAT &OPR *BCAT &VAL)        
+0008.01              CHGVAR VAR(&ORDER) VALUE('*ASCEND')                       
+0009.00              IF COND(&ORD='D') THEN(CHGVAR VAR(&ORDER) +               
+0010.00              VALUE('*DESCEND'))                                        
+0011.00              OPNQRYF    FILE((*CURLIB/EMPMAIN)) QRYSLT(&QRY) +         
+0012.00                           KEYFLD((&KEY &ORDER))                        
+0013.00              CALL       PGM(*CURLIB/EMPSFLR)
+0014.00              CLOF       OPNID(EMPMAIN)                               
+0015.00              ENDDO                                                   
+0016.00              ENDDO                                                   
+0017.00 ENDPGM                                                               
+        ****************** End of data **************************************  
+   
+12. Calculator : warning message when a number divide by zero
+
+ SEU==>                                                                   CALCC
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 
+        *************** Beginning of data *************************************
+0001.00 PGM                                                                    
+0002.00              DCLF       FILE(*CURLIB/CALCD)                            
+0003.00              DOWHILE COND(&IN53='0')                                   
+0004.00              SNDRCVF    RCDFMT(NUMENT)                                 
+0005.00              IF COND(&IN53='1') THEN(LEAVE)                            
+0006.00              IF         COND(&OPT = 'A') THEN(CHGVAR VAR(&C) +         
+0007.00                           VALUE(&A + &B))                              
+0008.00              IF         COND(&OPT = 'S') THEN(CHGVAR VAR(&C) +         
+0009.00                           VALUE(&A - &B))                              
+0009.01              IF         COND(&OPT = 'M') THEN(CHGVAR VAR(&C) +         
+0009.02                           VALUE(&A * &B))                              
+0009.03              IF         COND(&OPT = 'D') THEN(DO)                      
+0009.05                           CHGVAR VAR(&C) VALUE(&A / &B)                
+0009.06              MONMSG     MSGID(MCH1211) EXEC(DO)                        
+0009.07              CHGVAR VAR(&MSG) VALUE('INVALID DIVISION BY ZERO')        
+0009.07              CHGVAR VAR(&MSG) VALUE('INVALID DIVISION BY ZERO')      
+0009.08              ITERATE                                                 
+0010.00              ENDDO                                                   
+0010.01              ENDDO                                                   
+0010.02              ENDDO                                                   
+0011.00 ENDPGM                                                               
+        ****************** End of data **************************************
+                                                                            
+13. Retrive % change values of Data area
+
+ SEU==>                                                              WITHDTARAC
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 
+        *************** Beginning of data *************************************
+0001.00 PGM                                                                    
+0002.00    DCL VAR(&DTA) TYPE(*DEC) LEN(5 0)                                   
+0002.01    DCL VAR(&CHDTA) TYPE(*CHAR) LEN(5)                                  
+0003.00              RTVDTAARA  DTAARA(*CURLIB/SJDTA) RTNVAR(&DTA)             
+0004.00              CHGVAR VAR(&DTA) VALUE(&DTA + 1)                          
+0005.00              CHGDTAARA  DTAARA(*CURLIB/SJDTA) VALUE(&DTA)              
+0006.00              CHGVAR VAR(&CHDTA) VALUE(&DTA)                            
+0007.00    SNDPGMMSG MSG(&CHDTA)                                               
+0008.00 ENDPGM                                                                 
+        ****************** End of data ****************************************                     
+                                                                         
