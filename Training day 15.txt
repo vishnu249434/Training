@@ -1,0 +1,129 @@
+1.Program to copy records from query file and use in report 
+ SEU==>                                                               NOODPQRYC
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 
+        *************** Beginning of data *************************************
+0001.00 PGM PARM(&FLD &OPR &VAL &KEY &ORD)                                     
+0002.00    DCL VAR(&QRY) TYPE(*CHAR) LEN(50)                                   
+0003.00    DCL VAR(&FLD) TYPE(*CHAR) LEN(10)                                   
+0004.00    DCL VAR(&OPR) TYPE(*CHAR) LEN(2)                                    
+0005.00    DCL VAR(&VAL) TYPE(*CHAR) LEN(20)                                   
+0006.00    DCL VAR(&KEY) TYPE(*CHAR) LEN(10)                                   
+0007.00    DCL VAR(&ORD) TYPE(*CHAR) LEN(8)                                    
+0007.01    CHGVAR VAR(&QRY) VALUE(&FLD *BCAT &OPR *BCAT &VAL)                  
+0008.00              OPNQRYF    FILE((*CURLIB/EMPMAST)) QRYSLT(&QRY) +         
+0009.00                           KEYFLD((&KEY &ORD))                          
+0010.00              CPYFRMQRYF FROMOPNID(EMPMAST) TOFILE(*CURLIB/EMPREUSE) +  
+0011.00                           MBROPT(*REPLACE)                             
+0012.00    RUNQRY () TEN21LIB/EMPREUSE                                         
+0013.00    CLOF EMPMAST                                                       
+0014.00 ENDPGM                                                                 
+        ****************** End of data ****************************************
+                                                                               
+2.Program for DOFOR in CL program
+ SEU==>                                                                FORLOOPC 
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7  
+        *************** Beginning of data ************************************* 
+0001.00 PGM                                                                     
+0002.00              DCL        VAR(&NUM) TYPE(*INT) LEN(4)                     
+0002.01    DCL VAR(&MYLANG) TYPE(*CHAR) LEN(9) VALUE('MALAYALAM')               
+0002.02    DCL VAR(&STR) TYPE(*CHAR) LEN(9)                                     
+0003.00              DOFOR      VAR(&NUM) FROM(1) TO(9)                         
+0003.01              CHGVAR VAR(&STR) VALUE(%SST(&MYLANG 1 &NUM))               
+0004.00              SNDPGMMSG MSG(%SST(&MYLANG 1 &NUM))                        
+0005.00              ENDDO                                                      
+0006.00 ENDPGM                                                                  
+        ****************** End of data **************************************** 
+
+3.Execution of CL command QCMDEXE API 
+ SEU==>                                                               RUNCLCMDR
+ FMT D  DName+++++++++++ETDsFrom+++To/L+++IDc.Keywords+++++++++++++++++++++++++
+        *************** Beginning of data *************************************
+0001.00 DCMDTXT           S             50A   INZ('CTRSRCPF FILE(')            
+0002.00 DCMDLEN           S             15P 5 INZ(50)                          
+0003.00 C     *ENTRY        PLIST                                              
+0004.00 C                   PARM                    LIBNM            10        
+0005.00 C                   PARM                    SRCPF            10        
+0006.00 C                   EVAL      CMDTXT=%TRIM(CMDTXT)+%TRIM(LIBNM)+'/'+   
+0007.00 C                             %TRIM(SRCPF)+')'                         
+0008.00 C*    CMDTXT        DSPLY                                              
+0008.01 C* CALL TO API QCMDEXC BELOW                                           
+0008.02 C                   CALL      'QCMDEXC'                                
+0008.03 C                   PARM                    CMDTXT                     
+0008.04 C                   PARM                    CMDLEN                     
+0009.00 C                   EVAL      *INLR=*ON                                
+        ****************** End of data ****************************************
+
+4. SQL QUERIES
+
+SELECT * FROM TEN32LIB/EMPLOYEE  							
+SELECT EMPID,DEPT,NAME,GENDER FROM TEN21LIB/EMPLOYEE 							
+SELECT * FROM TEN32LIB/EMPLOYEE WHERE SALARY > 100000							
+SELECT * FROM TEN32LIB/EMPLOYEE WHERE DEPT=20 AND GENDER='M'							
+SELECT * FROM TEN32LIB/EMPLOYEE WHERE EMPID=102 OR EMPID=406 							
+SELECT * FROM TEN32LIB/EMPLOYEE WHERE SALARY<10000 AND SALARY>500 							
+SELECT * FROM TEN32LIB/EMPLOYEE WHERE SALARY BETWEEN 1000 AND 10000							
+SELECT * FROM TEN32LIB/EMPLOYEE WHERE SALARY NOT BETWEEN 10000 AND 100000							
+SELECT * FROM TEN32LIB/EMPLOYEE WHERE DOJ BETWEEN '07/12/23' AND '09/12/23'                                                       							
+SELECT * FROM EMPLOYEE WHERE NAME LIKE 'ANU%' 							
+SELECT * FROM EMPLOYEE WHERE NAME LIKE '___I%'							
+SELECT * FROM EMPLOYEE WHERE NOT NAME LIKE 'B%'							
+SELECT * FROM EMPLOYEE WHERE DEPT IN (10,20)							
+UPDATE EMPLOYEE SET NAME='maninder' WHERE NAME='MANINDER'							
+update EMPLOYEE set name='MANINDER' where name='MANI'							
+SELECT * FROM EMPLOYEE WHERE UPPER(NAME)='MANINDER' 							
+SELECT * FROM EMPLOYEE WHERE LOWER(NAME)='maninder'  							
+SELECT * FROM EMPLOYEE ORDER BY SALARY							
+SELECT * FROM EMPLOYEE ORDER BY SALARY DESC							
+SELECT * FROM EMPLOYEE ORDER BY NAME							
+SELECT * FROM EMPLOYEE ORDER BY NAME DESC							
+SELECT * FROM EMPLOYEE WHERE DEPT=20 ORDER BY NAME							
+SELECT * FROM EMPLOYEE WHERE DEPT=20 ORDER BY NAME DESC							
+SELECT * FROM EMPLOYEE ORDER BY DEPT,NAME							
+SELECT * FROM EMPLOYEE ORDER BY DEPT, NAME DESC 							
+							
+>AGGREGATION COUNT MAX MIN AVG COUNT 							
+							
+SELECT SUM(SALARY), MAX(SALARY), MIN(SALARY), AVG(SALARY), COUNT(*) FROM EMPLOYEE                                							
+							
+>GROUP BY-applies numeric aggregation based on grouped data of a given coloumn value.							
+							
+SELECT DEPT,SUM(SALARY), MAX(SALARY), COUNT(*) FROM EMPLOYEE GROUP BY DEPT                                                              							
+							
+SELECT DEPT,SUM(SALARY), MAX(SALARY), COUNT(*) FROM EMPLOYEE GROUP BY DEPT ORDER BY DEPT                                                							
+							
+SELECT SUM(SALARY), MAX(SALARY), COUNT(*) CNT FROM EMPLOYEE 							
+							
+SELECT SUM(SALARY), COUNT(*), DEPT FROM EMPLOYEE WHERE GENDER='M' GROUP BY DEPT                                                         							
+							
+SELECT SUM(SALARY), COUNT(*), DEPT FROM EMPLOYEE WHERE GENDER='M' GROUP BY DEPT HAVING COUNT(*)=6                                      							
+							
+>SUBSELECT- INNER  NESTED SELECT WILL EXECUTE FIRST, AND PRODUCES ROWS WITH ONE COULMN VALUE,  WHICH IS USED BY OUTER WHERE CLAUSE START BY OUTER SELECT.							
+							
+SELECT * FROM EMPLOYEE WHERE SALARY=(SELECT MAX(SALARY) FROM EMPLOYEE 							
+							
+SELECT * FROM EMPLOYEE WHERE SALARY<(SELECT MAX(SALARY) FROM EMPLOYEE 							
+							
+SELECT * FROM EMPLOYEE WHERE SALARY=(SELECT MAX(SALARY) FROM EMPLOYEE WHERE SALARY<(SELECT MAX(SALARY) FROM EMPLOYEE ))  
+             														
+>INSERT OPERATION
+							
+INSERT INTO TEN32LIB/EMPLOYEE  VALUES(12341, 'RAHUL', 20, 'M','15.11.2022', 600000)                                           							
+							
+INSERT INTO TEN32LIB/EMPLOYEE  (EMPID, NAME, GENDER, DOJ, SALARY)  							
+VALUES(654321, 'SALMAN', 'M', '19.09.2020', 46778)                 							
+
+DELETE IFSEMP							
+INSERT INTO TEN32LIB/IFSEMP SELECT * FROM EMPLOYEE 							
+							
+INSERT INTO TEN32LIB/IFSEMP (NAME, EMPID, GENDER, DOJ, SALARY)      							
+SELECT NAME,EMPID,GENDER,DOJ,SALARY FROM EMPLOYEE8 WHERE GENDER='F' 														
+
+>UPDATE OPERATION 
+							
+UPDATE EMPLOYEE SET SALARY=SALARY+(SALARY*0.1) WHERE GENDER='F' 							
+							
+UPDATE TEN32LIB/EMPLOYEESET NAME = CONCAT(UPPER(SUBSTR(NAME,1,1)), LOWER(SUBSTR(NAME,2)))                                              							
+							
+UPDATE TEN32LIB/EMPLOYEE SET NAME= (LOWER(NAME)) 							
+UPDATE TEN32LIB/EMPLOYEE SET NAME = UPPER(NAME) WHERE DEPT=20							
+

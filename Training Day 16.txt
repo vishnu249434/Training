@@ -1,0 +1,114 @@
+1.Create table with constraints	in SQL							
+
+CREATE TABLE TEN32LIB/SBANKMAST (MACNO DECIMAL (8 , 0) NOT NULL,   								
+ACHOLDER CHARACTER (20 ) NOT NULL, ACTYPE CHARACTER (2 ) NOT NULL, 								
+DTOPEN DATE NOT NULL WITH DEFAULT, MSTBAL DECIMAL (12 , 2) NOT NULL								
+WITH DEFAULT, PRIMARY KEY (MACNO), CHECK (ACTYPE='SB' OR           								
+ACTYPE='RD' OR ACTYPE='FD' ))                                      								
+								
+CREATE TABLE TEN32LIB/SBANKTRAN (TACNO DEC (8 , 0) NOT NULL, SLIPNO   								
+DEC (6 , 0) NOT NULL, DTTRAN DATE NOT NULL, TRNTYPE CHAR (2 ) NOT     								
+NULL, TRNMODE CHAR (3 ) NOT NULL WITH DEFAULT, TRNAMT DEC (12 ) NOT   								
+NULL, FOREIGN KEY (TACNO) REFERENCES TEN21LIB/SBANKMAST (MACNO) ON    								
+DELETE NO ACTION ON UPDATE NO ACTION, UNIQUE (SLIPNO), CHECK          								
+(TRNTYPE = 'CR' OR TRNTYPE = 'DP' ), CHECK (TRNMODE = 'CSH' OR        								
+TRNMODE = 'CHQ'))                                                     								
+								
+INSERT INTO TEN32LIB/SBANKMAST VALUES(1, 'LIA', 'SB', '10.09.2021',24000)                                                                    								
+INSERT INTO TEN32LIB/SBANKMAST VALUES(2, 'SHAM', 'FD', '13.05.2023',25400)       								                                                                   								
+INSERT INTO TEN32LIB/SBANKTRAN VALUES(2, 002, '05.01.2023', 'CR','CHQ', 4000)  
+
+ Constraint violation                                                    							
+UPDATE SBANKMAST SET MACNO=5 WHERE MACNO=2                           
+Update prevented by referential constraint Q_TEN32LIB_SBANKTRAN_TACN 
+						
+DELETE SBANKMAST WHERE MACNO=2     
+Delete prevented by referential constraint Q_TEN32LIB_SBANKTRAN_TACN 								
+
+2.Deptartment wise Employee sorting with emded SQL.
+
+ SEU==>                                                                 SQLQRYR
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++
+        *************** Beginning of data *************************************
+0000.01 FSQLQRYD   CF   E             WORKSTN SFILE(SQLSFL:RRN)                
+0002.00 DRRN              S              3P 0 INZ(*ZEROS)                      
+0003.00 C                   EVAL      *IN58=*ON                                
+0004.00 C                   DOW       NOT *IN03                                
+0004.01 C                   WRITE     FOOTER                                   
+0005.00 C                   EXFMT     SQLCTL                                   
+0006.00 C   03              LEAVE                                              
+0006.01 C                   EXSR      FILLSFL                                  
+0007.00 C                   ENDDO                                              
+0008.00 C                   EVAL      *INLR=*ON                                
+0009.00 C     FILLSFL       BEGSR                                              
+0010.00 C                   EVAL      *IN59=*ON                                
+0011.00 C                   WRITE     SQLCTL                                   
+0011.01 C                   EVAL      *IN59=*OFF                               
+0011.02 C                   EVAL      RRN=0                                    
+0012.00 C/EXEC SQL                                                             
+0013.00 C+ DECLARE DEPTCUR CURSOR FOR SELECT * FROM TEN32LIB/EMPLOYEE WHERE     
+0013.01 C+ DEPT=:QDEPT                                                         
+0014.00 C/END-EXEC                                                             
+0015.00 C/EXEC SQL                                                             
+0016.00 C+ OPEN DEPTCUR                                                        
+0017.00 C/END-EXEC                                                             
+0018.00 C                   DOW       SQLCODE=0                                
+0019.00 C/EXEC SQL                                                             
+0020.00 C+ FETCH NEXT FROM DEPTCUR INTO :EMPID, :NAME, :DEPT, :GENDER,         
+0021.00 C/END-EXEC                                                             
+0022.00 C                   IF        SQLCODE=100                              
+0022.01 C** IF THERE IS NOMORE DATA THEN LEAVE                                 
+0023.00 C                   LEAVE                                              
+0024.00 C                   ENDIF                                              
+0024.01 C* THE BELOW 4 LINE ARE TO ELEMINATE REPEATING OF SAME RECORD ie there 
+0024.02 C* doj 1899 181 is considered are error by the systm                   
+0024.03 C                   SELECT                                             
+0024.04 C                   WHEN      SQLCODE=-181 
+0024.05 C                   ITER                   
+0024.06 C                   ENDSL                  
+0025.00 C                   EVAL      RRN+=1       
+0026.00 C                   WRITE     SQLSFL       
+0027.00 C                   ENDDO                  
+0028.00 C                   EVAL      *IN57=*OFF   
+0029.00 C                   IF        RRN > 0      
+0030.00 C                   EVAL      *IN57=*ON    
+0031.00 C                   ENDIF                                            
+0032.00 C/EXEC SQL                                                           
+0033.00 C+ CLOSE DEPTCUR                                                     
+0034.00 C/END-EXEC                                                           
+0035.00 C                   ENDSR                                            
+        ****************** End of data **************************************
+
+
+3. Implementation of RPGLE with embed SQL -  Insertion of BANKTRAN through SQL 
+
+SEU==>                                                                 SQLINSR
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++
+        *************** Beginning of data *************************************
+0001.00 FSQLINSD   CF   E             WORKSTN                                  
+0002.00 DSQLSTMT          S            100A                                    
+0003.00 C                   DOW       NOT *IN03                                
+0004.00 C                   EXFMT     ENTSCR                                   
+0005.00 C   03              LEAVE                                              
+0006.00 C                   IF        *IN04                                    
+0007.00 C/EXEC SQL                                                             
+0008.00 C+ INSERT INTO TEN32LIB/SBANKTRAN                                      
+0009.00 C+ VALUES(:TACNO,:SLIPNO,:DTTRAN,:TRNTYPE,:TRNMODE,:TRNAMT)            
+0010.00 C/END-EXEC                                                             
+0011.00 C                   CLEAR                   ENTSCR                     
+0011.02 C     SQLCODE       DSPLY                                              
+0011.03 C                   SELECT                                             
+0011.04 C                   WHEN      SQLCODE=-530                             
+0011.05 C                   EVAL      MSG='NO SUCH A/C NO IN MASTER'           
+0011.06 C                   WHEN      SQLCODE=-545                             
+0011.05 C                   EVAL      MSG='NO SUCH A/C NO IN MASTER'            
+0011.06 C                   WHEN      SQLCODE=-545                              
+0011.07 C                   EVAL      MSG='INVALID COLUMN VALUE'                
+0011.08 C                   ENDSL                                               
+0012.00 C                   ENDIF                                               
+0013.00 C                   IF        *IN12                                     
+0014.00 C                   CLEAR                   ENTSCR                      
+0015.00 C                   ENDIF                                               
+0016.00 C                   ENDDO                                               
+0017.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data ****************************************                                                                                
