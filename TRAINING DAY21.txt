@@ -1,0 +1,235 @@
+1.Write a program to print all records of employee file using non-elastic subfile
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                               NONELASTR 
+ FMT *   *. 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+. 
+        *************** Beginning of data ************************************* 
+0000.01 F* NON ELASTIC SUBFILE SINGLE PG SFLSIZ=SFLPAG                          
+0001.00 FEMPLOYEE  IF   E           K DISK                                      
+0002.00 FNONELASTD CF   E             WORKSTN SFILE(ONEPAGESFL:RRN)             
+0003.00 DRRN              S              2P 0 INZ(0)                            
+0004.00 DCURIDX           S              5P 0 INZ(0)                            
+0005.00 DMAXIDX           S              5P 0 INZ(0)                            
+0006.00 DIDXARY           S              6P 0 DIM(100)                          
+0007.00 D* IT IS IMP THAT LAST KEY INITIAL VALUE IS 0 SO 0 SETGT                
+0008.00 DLASTLASTKEY      S              6P 0                                   
+0009.00 C     *LOVAL        SETLL     EREC                                      
+0010.00 C                   EXSR      DOWNSR                                    
+0011.00 C                   DOW       NOT *IN03                                 
+0011.01 C                   WRITE     FOOTER                                    
+0012.00 C                   EXFMT     ONEPAGECTL                                
+0013.00 C   03              LEAVE                                               
+0014.00 C                   IF        *IN96 AND NOT *IN98                       
+0015.00 C                   EXSR      DOWNSR               
+0016.00 C                   ENDIF                                               
+0017.00 C                   IF        *IN95 AND NOT *IN97                       
+0018.00 C                   EXSR      UPSR                                      
+0019.00 C                   ENDIF                                               
+0020.00 C                   ENDDO                                               
+0021.00 C                   EVAL      *INLR=*ON                                 
+0022.00 C     DOWNSR        BEGSR                                               
+0023.00 C                   EVAL      *IN62=*OFF                                
+0024.00 C                   EVAL      RRN=0                                     
+0025.00 C                   WRITE     ONEPAGECTL                                
+0026.00 C                   IF        CURIDX=MAXIDX                             
+0027.00 C                   EVAL      CURIDX=CURIDX+1                           
+0027.01 C* NEW KEY GEETING ADDED TO ARRAY                                       
+0028.00 C                   EVAL      MAXIDX=MAXIDX+1                           
+0029.00 C     LASTLASTKEY   SETGT     EREC                                      
+0030.00 C     LASTLASTKEY   DSPLY                                               
+0031.00 C                   ENDIF                                               
+0031.01 C* KEY ALREADY ADDED STORED IN ARRAY       
+0032.00 C                   IF        CURIDX<MAXIDX                             
+0033.00 C                   EVAL      CURIDX+=1                                 
+0034.00 C     IDXARY(CURIDX)SETLL     EREC                                      
+0035.00 C                   ENDIF                                               
+0036.00 C     1             DO        8             X                 2 0       
+0037.00 C                   READ      EREC                                      
+0038.00 C                   IF        X=1                                       
+0039.00 C                   EVAL      IDXARY(CURIDX)=EMPID                      
+0040.00 C                   ENDIF                                               
+0041.00 C                   IF        X=8 OR %EOF                               
+0042.00 C                   EVAL      LASTLASTKEY=EMPID                         
+0043.00 C                   ENDIF                                               
+0044.00 C                   IF        %EOF                                      
+0045.00 C                   LEAVE                                               
+0046.00 C                   ENDIF                                               
+0047.00 C                   EVAL      RRN+=1                                    
+0048.00 C                   WRITE     ONEPAGESFL                                
+0049.00 C                   ENDDO                
+0050.00 C                   EVAL      *IN61=*ON                                 
+0051.00 C                   EVAL      *IN62=*ON                                 
+0051.01 C* DISALLOW PAGEDOWN NEXT TIME 98=ON                                    
+0052.00 C                   IF        %EOF(EMPLOYEE)                            
+0053.00 C                   EVAL      *IN98=*ON                                 
+0054.00 C                   ENDIF                                               
+0055.00 C                   IF        CURIDX>1                                  
+0056.00 C                   EVAL      *IN97=*OFF                                
+0057.00 C                   ENDIF                                               
+0058.00 C                   ENDSR                                               
+0059.00 C     UPSR          BEGSR                                               
+0060.00 C                   EVAL      *IN98=*OFF                                
+0061.00 C                   EVAL      *IN62=*OFF                                
+0062.00 C                   EVAL      RRN=0                                     
+0063.00 C                   WRITE     ONEPAGECTL                                
+0064.00 C                   IF        CURIDX>1 AND CURIDX<=MAXIDX               
+0065.00 C                   EVAL      CURIDX-=1                                 
+0066.00 C                   ENDIF                                 
+0067.00 C                   IF        CURIDX=1                                  
+0068.00 C                   EVAL      *IN97=*ON                                 
+0069.00 C                   ENDIF                                               
+0070.00 C     IDXARY(CURIDX)SETLL     EREC                                      
+0071.00 C     1             DO        8             X                 2 0       
+0072.00 C                   READ      EREC                                      
+0073.00 C                   EVAL      RRN=RRN+1                                 
+0074.00 C                   IF        %EOF                                      
+0075.00 C                   LEAVE                                               
+0076.00 C                   ENDIF                                               
+0077.00 C                   WRITE     ONEPAGESFL                                
+0078.00 C                   ENDDO                                               
+0079.00 C                   EVAL      *IN61=*ON                                 
+0080.00 C                   EVAL      *IN62=*ON                                 
+0081.00 C                   ENDSR                                               
+        ****************** End of data ****************************************
+
+2.Write a program to update , delete employee record and use commit control
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                EMPUPD1R 
+ FMT *   *. 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7 ...+. 
+        *************** Beginning of data ************************************* 
+0000.01 F*   UPDATE/DEL PF REC IN PROGRAM                                       
+0000.02 F*   NESTED LOOP AFTER RECORD FOUND                                     
+0000.03 F*   ALSO USED OVERLAY FOR SCREENS                                      
+0000.04 F*   EXPLICIT OPEN OF PF.USROPN                                         
+0001.00 FEMPLOYEE  UF   E           K DISK    USROPN COMMIT                     
+0002.00 FEMPUPD1D  CF   E             WORKSTN                                   
+0003.00 C                   OPEN      EMPLOYEE                                  
+0004.00 C                   EVAL      *IN65=*OFF                                
+0005.00 C                   DOW       NOT *IN03                                 
+0005.01 C*SCREEN START TO EXECUTE                                               
+0006.00 C                   WRITE     HEADER                                    
+0007.00 C                   WRITE     FOOTER                                    
+0008.00 C                   EXFMT     UPDSCR                                    
+0009.00 C   03              LEAVE                                               
+0009.01 C* CODE FOR COMMIT ROLL BACK BELOW                                      
+0009.02 C                   IF        *IN07                                     
+0009.03 C                   COMMIT             
+0009.04 C                   ITER                                                
+0009.05 C                   ENDIF                                               
+0009.06 C                   IF        *IN08                                     
+0009.07 C                   ROLBK                                               
+0009.08 C                   ITER                                                
+0009.09 C                   ENDIF                                               
+0009.10 C* COMMIT/ROLLBACK CODE ENDS                                            
+0009.11 C* HERE USING CHAIN THE PARTICULAR EMPID IS SEARCHED                    
+0010.00 C     EMPID         CHAIN     EREC                                      
+0011.00 C                   IF        NOT %FOUND(EMPLOYEE)                      
+0012.00 C                   EVAL      MSG='NO SUCH EMPID.ENTER VALID'           
+0013.00 C                   ITER                                                
+0014.00 C                   ENDIF                                               
+0015.00 C                   EVAL      *IN65=*ON                                 
+0016.00 C                   DOW       *IN65                                     
+0016.01 C* NOW AGAIN SCREEN EXECUTE TO UPDATE                                   
+0017.00 C                   WRITE     HEADER                                    
+0018.00 C                   WRITE     FOOTER         
+0019.00 C                   EXFMT     UPDSCR                                 
+0020.00 C   03              LEAVE                                            
+0020.01 C* HERE TO UPDATE F4 IS ON                                           
+0021.00 C                   IF        *IN04                                  
+0022.00 C                   UPDATE    EREC                                   
+0023.00 C                   CLEAR                   UPDSCR                   
+0024.00 C                   EVAL      *IN65=*OFF                             
+0025.00 C                   LEAVE                                            
+0026.00 C                   ENDIF                                            
+0026.01 C* HERE TO DELETE F5 IS ON                                           
+0027.00 C                   IF        *IN05                                  
+0028.00 C                   DELETE    EREC                                   
+0029.00 C                   CLEAR                   UPDSCR                   
+0030.00 C                   EVAL      *IN65=*OFF                             
+0031.00 C                   LEAVE                                            
+0032.00 C                   ENDIF                                            
+0033.00 C                   IF        *IN12                                  
+0033.01 C                   CLEAR                   UPDSCR                      
+0033.02 C                   EVAL      *IN65=*OFF                                
+0033.03 C                   LEAVE                                               
+0034.00 C                   ENDIF                                               
+0035.00 C                   ENDDO                                               
+0036.00 C                   ENDDO                                               
+0037.00 C                   CLOSE     EMPLOYEE                                  
+0038.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+ Columns . . . :    1  71            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 CMTCTLC 
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7  
+        *************** Beginning of data ************************************* 
+0001.00 PGM                                                                     
+0002.00              STRJRNPF   FILE(*CURLIB/EMPLOYEE) JRN(*CURLIB/KRJRN) +     
+0002.01                           IMAGES(*BOTH)                                 
+0003.00              STRCMTCTL  LCKLVL(*ALL) NFYOBJ(*CURLIB/EMPLOYEE +          
+0003.01                           (*FILE)) DFTJRN(*CURLIB/KRJRN)                
+0004.00              CALL       PGM(*CURLIB/EMPUPD1R)                           
+0005.00    ENDCMTCTL                                                            
+0006.00              ENDJRNPF   FILE(*CURLIB/EMPLOYEE) JRN(*CURLIB/KRJRN)       
+0007.00 ENDPGM                                                                  
+        ****************** End of data **************************************** 
+                                                                                
+3.Write a program to validate the entry into employee record and print msg from message file 
+the entry doesn't satisfy the validation.
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 EMPENTR 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FEMPLOYEE  IF A E           K DISK    EXTFILE('TEN32LIB/EMPLOYEE')      
+0002.00 FEMPENTD   CF   E             WORKSTN RENAME(ENTSCR:EMPSCR)             
+0002.01 D* EXPORT - IMPORT IN BOUND MODULES OF ILEPGM                           
+0002.02 D* DATA VALUES ARE AVAILABLE BETWEEN PROGRAMS                           
+0002.03 DMYDS             DS                  EXPORT                            
+0002.04 DNM                             15A                                     
+0002.05 DAMT                             7P 2                                   
+0002.06 C                   EVAL      NM='KARTHIKA'                             
+0002.07 C                   EVAL      AMT=25000                                 
+0003.00 C                   DOW       NOT *INKC                                 
+0004.00 C                   EXFMT     EMPSCR                                    
+0005.00 C   KC              LEAVE                                               
+0006.00 C                                                                       
+0007.00 C                   MOVEA     '000000'      *IN(41)                     
+0008.00 C     EMPID         CHAIN     EREC                                      
+0009.00 C                   IF        %FOUND OR EMPID=0                         
+0010.00 C                   EVAL      *IN41=*ON             
+0010.01 C                   EVAL      MSGID='ABC0001'                    
+0011.00 C                   ITER                                         
+0012.00 C                   ENDIF                                        
+0013.00 C                   IF        NAME=*BLANKS                       
+0014.00 C                   EVAL      *IN42=*ON                          
+0014.01 C                   EVAL      MSGID='ABC0002'                    
+0015.00 C                   ITER                                         
+0016.00 C                   ENDIF                                        
+0017.00 C                   IF        NOT (%REM(DEPT:2)=0 AND DEPT<60)   
+0018.00 C                   EVAL      *IN43=*ON                          
+0018.01 C                   EVAL      MSGID='ABC0003'                    
+0019.00 C                   ITER                                         
+0020.00 C                   ENDIF                                        
+0021.00 C                   IF        NOT(GENDER='M' OR GENDER='F')      
+0022.00 C                   EVAL      *IN44=*ON                          
+0022.01 C                   EVAL      MSGID='ABC0004'                    
+0023.00 C                   ITER                                         
+0024.00 C                   ENDIF                                 
+0025.00 C                   IF        SALARY =0                                 
+0026.00 C                   EVAL      *IN46=*ON                                 
+0026.01 C                   EVAL      MSGID='ABC0005'                           
+0027.00 C                   ITER                                                
+0028.00 C                   ENDIF                                               
+0029.00 C                   IF        *INKD                                     
+0030.00 C                   WRITE     EREC                                      
+0031.00 C                   CLEAR                   EMPSCR                      
+0032.00 C                   ENDIF                                               
+0033.00 C                   IF        *INKL                                     
+0034.00 C                   CLEAR                   EMPSCR                      
+0035.00 C                   ENDIF                                               
+0036.00 C                   ENDDO                                               
+0037.00 C                   EVAL      *INLR='1'                                 
+        ****************** End of data **************************************** 
+                                                                                

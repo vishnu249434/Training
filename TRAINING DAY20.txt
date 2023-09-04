@@ -1,0 +1,261 @@
+1.Write a program to print salary report and print the salary in words,create a procedure to 
+convert number into words and use RPGLE program to print report and call using CL progam
+
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                              INTOWORDSR 
+ FMT H  HKeywords++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 HNOMAIN                                                                 
+0002.00 PTOWORDS          B                   EXPORT                            
+0003.00 DTOWORDS          PI            60A                                     
+0004.00 DNUM                             5S 0                                   
+0004.01 DWA               S             15A   DIM(27)                           
+0005.00 DNUMDS            DS                                                    
+0006.00 D* NUMDS=54321 TH=54 THT=5 THU=4 HUN=3 TN=21 TNT=2 TNU=1                
+0007.00 DTH                              2S 0                                   
+0008.00 DTHT                             1S 0 OVERLAY(TH:1)                     
+0009.00 DTHU                             1S 0 OVERLAY(TH:2)                     
+0010.00 DHUN                             1S 0                                   
+0011.00 DTN                              2S 0                                   
+0012.00 DTNT                             1S 0 OVERLAY(TN:1)                     
+0013.00 DTNU                             1S 0 OVERLAY(TN:2)                     
+0014.00 D* RETURN CHAR VARIABLE OF 60 DEFINED BELOW                             
+0015.00 DWSTR             S             60A   
+0015.01 C                   EVAL      WA(1)='ONE'                        
+0015.02 C                   EVAL      WA(2)='TWO'                        
+0015.03 C                   EVAL      WA(3)='THREE'                      
+0015.04 C                   EVAL      WA(4)='FOUR'                       
+0015.05 C                   EVAL      WA(5)='FIVE'                       
+0015.06 C                   EVAL      WA(6)='SIX'                        
+0015.07 C                   EVAL      WA(7)='SEVEN'                      
+0015.08 C                   EVAL      WA(8)='EIGHT'                      
+0015.09 C                   EVAL      WA(9)='NINE'                       
+0015.10 C                   EVAL      WA(10)='TEN'                 
+0015.11 C                   EVAL      WA(11)='ELEVAN'              
+0015.12 C                   EVAL      WA(12)='TWELVE'              
+0015.13 C                   EVAL      WA(13)='THIRTEEN'            
+0015.14 C                   EVAL      WA(14)='FOURTEEN'            
+0015.15 C                   EVAL      WA(15)='FIFTEEN'             
+0015.16 C                   EVAL      WA(16)='SIXTEEN'             
+0015.17 C                   EVAL      WA(17)='SEVENTEEN'           
+0015.18 C                   EVAL      WA(18)='EIGHTEEN'            
+0015.19 C                   EVAL      WA(19)='NINETEEN'    
+0015.20 C                   EVAL      WA(20)='TWENTY'      
+0015.21 C                   EVAL      WA(21)='THIRTY'      
+0015.22 C                   EVAL      WA(22)='FORTY'       
+0015.23 C                   EVAL      WA(23)='FIFTY'       
+0015.24 C                   EVAL      WA(24)='SIXTY'       
+0015.25 C                   EVAL      WA(25)='SEVENTY'     
+0015.26 C                   EVAL      WA(26)='EIGHTY'      
+0015.27 C                   EVAL      WA(27)='NINETY'      
+0016.00 C                   MOVE      NUM           NUMDS                    
+0017.00 C                   IF        TH<21 AND TH>0                         
+0018.00 C                   EVAL      WSTR=%TRIM(WSTR)+%TRIM(WA(TH))+' '+    
+0019.00 C                             'THOUSAND'                             
+0020.00 C                   ENDIF                                            
+0021.00 C                   IF        TH>20 AND THU>0                        
+0022.00 C                   EVAL      WSTR=%TRIM(WSTR)+%TRIM(WA(THT+18))+' '+
+0023.00 C                             %TRIM(WA(THU))+' '+'THOUSAND'          
+0024.00 C                   ENDIF                                            
+0025.00 C*                                                                     
+0026.00 C                   IF        TH>20 AND THU=0                          
+0027.00 C                   EVAL      WSTR=%TRIM(WSTR)+%TRIM(WA(THT+18))+' '+  
+0028.00 C                             ' THOUSAND'                              
+0029.00 C                   ENDIF                                              
+0030.00 C                   IF        HUN>0                                    
+0031.00 C                   EVAL      WSTR=%TRIM(WSTR)+' '+%TRIM(WA(HUN))+'  '+
+0032.00 C                             'HUNDRED'                                
+0033.00 C                   ENDIF                                              
+0034.00 C*                                                                     
+0035.00 C                   IF        TN<21 AND TN>0                           
+0036.00 C                   EVAL      WSTR=' '+ %TRIM(WSTR)+%TRIM(WA(TH))      
+0037.00 C                   ENDIF                                              
+0038.00 C                   IF        TN>20 AND TNU>0                          
+0039.00 C                   EVAL      WSTR=%TRIM(WSTR)+' '+%TRIM(WA(TNT+18))+' 
+0040.00 C                             %TRIM(WA(TNU))                           
+0041.00 C                   ENDIF                                              
+0042.00 C*                                                                     
+0043.00 C                   IF        TN>20 AND TNU=0                          
+0044.00 C                   EVAL      WSTR=%TRIM(WSTR)+' '+%TRIM(WA(TNT+18))+' 
+0045.00 C                                                                      
+0046.00 C                   ENDIF                                              
+0047.00 C                   RETURN    WSTR                                     
+0048.00 PTOWORDS          E                                                    
+        ****************** End of data ****************************************
+
+
+
+
+  Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC
+ SEU==>                                                               EMPPAYSLR
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++
+        *************** Beginning of data *************************************
+0001.01 FEMPLOYEE  IF   E           K DISK                                     
+0001.02 FEMPPAYSLPPO    E             PRINTER OFLIND(*IN95)                    
+0002.00 DTOWORDS          PR            60A                                    
+0003.00 D                                5S 0                                  
+0003.01 DZSAL             S              5S 0                                  
+0004.00 C                   READ      EREC                                     
+0005.00 C                   DOW       NOT %EOF                                 
+0005.01 C                   EVAL      SALARY=SALARY/100                        
+0005.02 C                   MOVE      SALARY        ZSAL                       
+0006.00 C                   WRITE     R1                                       
+0007.00 C                   WRITE     R2                                       
+0008.00 C                   WRITE     R3                                       
+0009.00 C                   WRITE     R4                                       
+0010.00 C                   WRITE     R5                                       
+0010.01 C                   EVAL      WRD=TOWORDS(ZSAL)                        
+0011.00 C                   WRITE     R6                                      
+0011.01 C                                                                     
+0011.02 C   95              EVAL      *IN95=*OFF                              
+0012.00 C                   READ      EREC                                    
+0013.00 C                   ENDDO                                             
+0014.00 C                   EVAL      *INLR=*ON                               
+        ****************** End of data ***************************************                                                                                                                                                                              
+
+
+
+ Columns . . . :    1  71            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                  MENU3C 
+ FMT **  ...+... 1 ...+... 2 ...+... 3 ...+... 4 ...+... 5 ...+... 6 ...+... 7  
+        *************** Beginning of data ************************************* 
+0001.00  PGM                                                                    
+0002.00              DCLF       FILE(*CURLIB/MENU1DSP)                          
+0003.00              DOWHILE COND(&IN03='0')                                    
+0004.00              SNDRCVF RCDFMT(MENUSCR)                                    
+0005.00              IF COND(&IN03= '1') THEN(LEAVE)                            
+0006.00              IF         COND(&RTNFLD = 'M1') THEN(CALLPRC PRC(EMPENTR)) 
+0008.01              IF         COND(&RTNFLD = 'M2') THEN(CALLPRC PRC(EMPUPDR)) 
+0010.01              IF         COND(&RTNFLD = 'M3') THEN(CALLPRC +             
+0010.02                           PRC(DEPTQRYR))                                
+0010.03              IF         COND(&RTNFLD = 'M4') THEN(CALLPRC +             
+0010.04                           PRC(NAVIGATER))                               
+0014.00              IF         COND(&RTNFLD = 'M5') THEN(SBMJOB CMD(CALL +     
+0015.00                           PGM(*CURLIB/SALREPOR)))                       
+0015.01              IF         COND(&RTNFLD = 'M6') THEN(CALLPRC +             
+0015.02                           PRC(EMPPAYSLR))                               
+0016.00              ENDDO                                                      
+0017.00  ENDPGM                                                               
+        ****************** End of data ***************************************                                                                         
+2.Write a program to find the student from its particular class or division or roll no
+and use composite keyed access path(KLIST)
+
+
+ Columns . . . :    1  71            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 STUDENT 
+ FMT PF .....A..........T.Name++++++RLen++TDpB......Functions++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00      A          R STUREC                                                
+0002.00      A            NAME          20A                                     
+0003.00      A            CLASS          2P 0                                   
+0004.00      A            DIV            1A                                     
+0005.00      A            ROLL           2P 0                                   
+0006.00      A          K CLASS                                                 
+0007.00      A          K DIV                                                   
+0008.00      A          K ROLL                                                  
+        ****************** End of data **************************************** 
+                                                                                
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                STUKEYSR 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FSTUDENT   IF   E           K DISK                                      
+0002.00 FSTUKEYSD  CF   E             WORKSTN SFILE(STUSFL:RRN)                 
+0003.00 DRRN              S              3P 0 INZ(*ZEROS)                       
+0004.00 C     K3            KLIST                                               
+0004.01 C                   KFLD                    CLS                         
+0005.00 C                   KFLD                    DIV                         
+0006.00 C                   KFLD                    ROL                         
+0007.00 C     K2            KLIST                                               
+0008.00 C                   KFLD                    CLS                         
+0009.00 C                   KFLD                    DIV                         
+0010.00 C     K1            KLIST                                               
+0011.00 C                   KFLD                    CLS                         
+0012.00 C                   EVAL      *IN72=*ON                                 
+0013.00 C                   DOW       NOT *IN03                                 
+0014.00 C                   WRITE     FOOTER                                    
+0015.00 C                   EXFMT     STUCTL                                    
+0016.00 C   03              LEAVE                                         
+0017.00 C                   SELECT                                        
+0018.00 C                   WHEN      CLS>0 AND DIV<>*BLANKS AND ROL>0    
+0019.00 C                   CALLP     FillWithThree()                     
+0020.00 C                   WHEN      CLS>0 AND DIV<>*BLANKS AND ROL=0    
+0021.00 C                   CALLP     FillWithTwo()                       
+0022.00 C                   WHEN      CLS>0 AND DIV=*BLANKS AND ROL=0     
+0023.00 C                   CALLP     FillWithOne()                       
+0024.00 C                   ENDSL                                         
+0025.00 C                   ENDDO                                            
+0026.00 C                   EVAL      *INLR=*ON                              
+0027.00 PFillWithThree    B                                                  
+0029.00 DFillWithThree    PI                                                 
+0030.00 C                   EVAL      *IN73=*ON                              
+0031.00 C                   WRITE     STUCTL                                 
+0032.00 C                   EVAL      RRN=0                                  
+0033.00 C                   EVAL      *IN73=*OFF                             
+0034.00 C     K3            SETLL     STUREC                                 
+0035.00 C     K3            READE     STUREC                                   
+0036.00 C                   DOW       NOT %EOF                                 
+0037.00 C                   EVAL      RRN+=1                                   
+0038.00 C                   WRITE     STUSFL                                   
+0039.00 C     K3            READE     STUREC                                   
+0040.00 C                   ENDDO                                              
+0042.00 C                   EVAL      *IN71=*OFF                               
+0043.00 C                   IF        RRN>0                                    
+0044.00 C                   EVAL      *IN71=*ON                                
+0045.00 C                   EVAL      *IN81=*ON                             
+0046.00 C                   ELSE                                            
+0047.00 C                   EVAL      MSG='NO MATCHING RECORD FOUND'        
+0048.00 C                   EVAL      *IN81=*OFF                            
+0049.00 C                   ENDIF                                           
+0050.00 C                   RETURN                                          
+0051.00 PFillWithThree    E                                                 
+0052.00 PFillWithTwo      B                                                 
+0053.00 DFillWithTwo      PI                                                
+0054.00 C                   EVAL      *IN73=*ON                         
+0055.00 C                   WRITE     STUCTL                            
+0056.00 C                   EVAL      RRN=0                             
+0057.00 C                   EVAL      *IN73=*OFF                        
+0058.00 C     K2            SETLL     STUREC                            
+0059.00 C     K2            READE     STUREC                            
+0060.00 C                   DOW       NOT %EOF                          
+0061.00 C                   EVAL      RRN+=1                            
+0062.00 C                   WRITE     STUSFL                            
+0063.00 C     K2            READE     STUREC                                
+0064.00 C                   ENDDO                                           
+0065.00 C                   EVAL      *IN71=*OFF                            
+0066.00 C                   IF        RRN>0                                 
+0067.00 C                   EVAL      *IN71=*ON                             
+0068.00 C                   EVAL      *IN81=*ON                             
+0069.00 C                   ELSE                                            
+0070.00 C                   EVAL      MSG='NO MATCHING RECORD FOUND'        
+0071.00 C                   EVAL      *IN81=*OFF                            
+0072.00 C                   ENDIF                                        
+0073.00 C                   RETURN                                       
+0074.00 PFillWithTwo      E                                              
+0075.00 PFillWithOne      B                                              
+0076.00 DFillWithOne      PI                                             
+0077.00 C                   EVAL      *IN73=*ON                          
+0078.00 C                   WRITE     STUCTL                             
+0079.00 C                   EVAL      RRN=0                              
+0080.00 C                   EVAL      *IN73=*OFF                         
+0081.00 C     K1            SETLL     STUREC                  
+0082.00 C     K1            READE     STUREC                  
+0083.00 C                   DOW       NOT %EOF                
+0084.00 C                   EVAL      RRN+=1                  
+0085.00 C                   WRITE     STUSFL                  
+0086.00 C     K1            READE     STUREC                  
+0087.00 C                   ENDDO                             
+0088.00 C                   EVAL      *IN71=*OFF              
+0089.00 C                   IF        RRN>0                   
+0090.00 C                   EVAL      *IN71=*ON                                 
+0091.00 C                   EVAL      *IN81=*ON                                 
+0092.00 C                   ELSE                                                
+0093.00 C                   EVAL      MSG='NO MATCHING RECORD FOUND'            
+0094.00 C                   EVAL      *IN81=*OFF                                
+0095.00 C                   ENDIF                                               
+0096.00 C                   RETURN                                              
+0097.00 PFillWithOne      E                                                     
+        ****************** End of data **************************************** 
+                                 

@@ -1,0 +1,166 @@
+1.Fetching of data from records using dynamic method using RPGLE 
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 DYNSQLR 
+ FMT H  HKeywords++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 HDFTACTGRP(*NO)                                                         
+0002.00 FDYNSQLD   CF   E             WORKSTN SFILE(DYNSFL:SRRN)                
+0003.00 DSTMT             S            100A   INZ('SELECT * FROM TEN32LIB/')    
+0004.00 DSRRN             S              3P 0 INZ(*ZEROS)                       
+0005.00 DLOADSFL          PR                                                    
+0006.00 D                              100A                                     
+0007.00 C                   EVAL      STMT=%TRIM(STMT)+'EMPLOYEE WHERE'         
+0008.00 C                   EVAL      *IN82=*ON                                 
+0009.00 C                   DOW       NOT *IN03                                 
+0010.00 C                   WRITE     FOOTER                                    
+0011.00 C                   EXFMT     DYNCTL                                    
+0012.00 C   03              LEAVE                                               
+0013.00 C                   EVAL      STMT=%TRIM(STMT)+' '+FLD+OPR+VAL          
+0014.00 C                   IF        KEY<>*BLANK                               
+0015.00 C                   EVAL      STMT=%TRIM(STMT)+' ORDER BY ' +           
+0015.01 C                             %TRIM(KEY)                                
+0016.00 C                   ENDIF                                           
+0017.00 C                   CALLP     LOADSFL(STMT)                         
+0017.01 C                   ENDDO                                           
+0018.00 C                   EVAL      *INLR=*ON                             
+0019.00 PLOADSFL          B                                                 
+0020.00 DLOADSFL          PI                                                
+0021.00 DSTR                           100A                                 
+0022.00 C                   EVAL      *IN83=*ON                             
+0023.00 C                   WRITE     DYNCTL                                
+0025.00 C                   EVAL      SRRN=0                                    
+0026.00 C/EXEC SQL                                                              
+0027.00 C+ PREPARE S1 FROM :STR                                                 
+0028.00 C/END-EXEC                                                              
+0028.01 C/EXEC SQL                                                              
+0029.00 C+ DECLARE DYNCUR CURSOR FOR S1                                         
+0030.00 C/END-EXEC                                                              
+0031.00 C/EXEC SQL                                                              
+0032.00 C+ OPEN DYNCUR                                                       
+0033.00 C/END-EXEC                                                           
+0034.00 C                   DOW       SQLCODE=0                              
+0035.00 C/EXEC SQL                                                           
+0036.00 C+ FETCH NEXT FROM DYNCUR INTO :EMPID, :NAME, :DEPT, :GENDER, :DOJ,  
+0036.01 C+ :SALARY                                                           
+0038.00 C/END-EXEC                                                           
+0039.00 C                   IF        SQLCODE=100                            
+0040.00 C                   LEAVE                                            
+0041.00 C                   ENDIF                                             
+0042.00 C                   EVAL      SRRN+=1                                 
+0043.00 C                   WRITE     DYNSFL                                  
+0044.00 C                   ENDDO                                             
+0045.00 C                   IF        SRRN>0                                  
+0046.00 C                   EVAL      *IN81=*ON                               
+0047.00 C                   ELSE                                              
+0048.00 C                   EVAL      *IN81=*OFF                              
+0049.00 C                   EVAL      MSG='NO RECORDS FETCHED FOR THIS QUERY' 
+0050.00 C                   ENDIF                                             
+0051.00 C/EXEC SQL                                                            
+0052.00 C+ CLOSE DYNCUR                                                       
+0053.00 C/END-EXEC                                                            
+0054.00 C                   RETURN                                            
+0055.00 PLOADSFL          E                                                   
+        ****************** End of data ***************************************
+
+2. fetching the details of the record by implementing 2 cursor in the field and declaring temporary field
+for fetching the data using SQLRPGLE.
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                SQLINS1R 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FSQLINSD   CF   E             WORKSTN                                   
+0002.00 DSQLSTMT          S            100A                                     
+0002.01 C                   EVAL      SQLSTMT='INSERT INTO TEN32LIB/SBANKTRAN'+ 
+0002.02 C                             ' VALUES(?,?,?,?,?,?) '                   
+0002.03 C/EXEC SQL                                                              
+0002.04 C+ PREPARE S1 FROM :SQLSTMT                                             
+0002.05 C/END-EXEC                                                              
+0003.00 C                   DOW       NOT *IN03                                 
+0004.00 C                   EXFMT     ENTSCR                                    
+0005.00 C   03              LEAVE                                               
+0006.00 C                   IF        *IN04                                     
+0007.00 C/EXEC SQL                                                              
+0008.00 C+ EXECUTE S1 USING                                                     
+0009.00 C+ :TACNO,:SLIPNO,:DTTRAN,:TRNTYPE,:TRNMODE,:TRNAMT                     
+0010.00 C/END-EXEC                                                              
+0011.00 C                   CLEAR                   ENTSCR                                                                                                  
+0011.01 C     SQLCODE       DSPLY                                     
+0011.02 C                   SELECT                                    
+0011.03 C                   WHEN      SQLCODE=-530                    
+0011.04 C                   EVAL      MSG='NO SUCH A/C NO IN MASTER'  
+0011.05 C                   WHEN      SQLCODE=-545                    
+0011.06 C                   EVAL      MSG='INVALID COLUMN VALUE'      
+0011.07 C                   ENDSL                                     
+0012.00 C                   ENDIF                                     
+0013.00 C                   IF        *IN12                           
+0014.00 C                   CLEAR                   ENTSCR                    
+0015.00 C                   ENDIF                                             
+0016.00 C                   ENDDO                                             
+0017.00 C                   EVAL      *INLR=*ON                               
+        ****************** End of data ***************************************
+3.Program to generate report layout of salary using embed sql
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC
+ SEU==>                                                                 SQLDEPT
+ FMT F  FFilename++IPEASFRlen+LKlen+AIDevice+.Keywords+++++++++++++++++++++++++
+        *************** Beginning of data *************************************
+0001.00 FDEPTSALR  O    E             PRINTER OFLIND(*IN95)                    
+0002.00 C/EXEC SQL                                                             
+0003.00 C+ DECLARE ALLRECS CURSOR FOR SELECT EMPID,NAME,DEPT,SALARY FROM       
+0004.00 C+ EMPLOYEE ORDER BY DEPT                                              
+0005.00 C/END-EXEC                                                             
+0006.00 C/EXEC SQL                                                             
+0007.00 C+ DECLARE GROUPS  CURSOR FOR SELECT DEPT, SUM(SALARY), MAX(SALARY)    
+0007.01 C+ FROM TEN24LIB/EMPLOYEE                                              
+0008.00 C+ GROUP BY DEPT                                                       
+0009.00 C/END-EXEC                                                             
+0010.00 C/EXEC SQL                                                             
+0011.00 C+ OPEN ALLRECS                                                        
+0012.00 C/END-EXEC                                                             
+0014.00 C/EXEC SQL                                                             
+0015.00 C+ OPEN GROUPS                                                         
+0016.00 C/END-EXEC                                                             
+0017.00 C                   WRITE     HEAD1                              
+0018.00 C                   WRITE     HEAD2                              
+0019.00 C/EXEC SQL                                                       
+0020.00 C+ FETCH NEXT FROM ALLRECS INTO :EMPID, :NAME, :DEPT, :SALARY    
+0021.00 C/END-EXEC                                                       
+0022.00 C                   EVAL      TMPDEPT=DEPT                       
+0023.00 C                   DOW       SQLCODE=0                          
+0024.00 C                   IF        SQLCODE=100                        
+0025.00 C                   LEAVE                                        
+0026.00 C                   ENDIF                                        
+0026.01 C                   WRITE     DETAIL                             
+0026.02 C   95              WRITE     HEAD1                              
+0028.00 C   95              WRITE     HEAD2                              
+0029.00 C   95              EVAL      *IN95=*ON                          
+0030.00 C/EXEC SQL                                                       
+0030.01 C+ FETCH NEXT FROM ALLRECS INTO :EMPID, :NAME, :DEPT, :SALARY    
+0030.02 C/END-EXEC                                                       
+0031.00 C                   IF        DEPT<>TMPDEPT                      
+0032.00 C/EXEC SQL                                                   
+0033.00 C+ FETCH NEXT FROM GROUPS  INTO :TMPDEPT, :DEPTSAL , :DEPTMAX
+0034.00 C/END-EXEC                                                   
+0035.00 C                   WRITE     SUM1                           
+0036.00 C                   WRITE     SUM2                           
+0037.00 C                   WRITE     SUM3                           
+0038.00 C                   EVAL      GRANDSAL+=DEPTSAL              
+0039.00 C                   EVAL      GRANMAX+=DEPTMAX               
+0040.00 C                   EVAL      TMPDEPT=DEPT                   
+0041.00 C                   ENDIF                                  
+0042.00 C                   ENDDO                                  
+0043.00 C                   WRITE     GRD1                         
+0044.00 C                   WRITE     GRD2                         
+0045.00 C/EXEC SQL                                                 
+0046.00 C+ CLOSE ALLRECS                                           
+0047.00 C/END-EXEC                                                 
+0047.01 C/EXEC SQL                                                 
+0047.02 C+ CLOSE GROUPS                                            
+0047.03 C/END-EXEC                                                             
+0048.00 C                   EVAL      *INLR=*ON                                
+        ****************** End of data ****************************************                                                                     

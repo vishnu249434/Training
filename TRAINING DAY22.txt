@@ -1,0 +1,118 @@
+1.Write a program to create asynchronous communication using DATAQ for that create a 
+message chat
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                               DTAQCHATR 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FDTAQCHATD CF   E             WORKSTN                                   
+0002.00 DDATALEN          S              5P 0 INZ(50)                           
+0003.00 C     L1            PLIST                                               
+0004.00 C                   PARM                    QNAME                       
+0005.00 C                   PARM                    LIBNM                       
+0006.00 C                   PARM                    DATALEN                     
+0007.00 C                   PARM                    MSG                         
+0007.01 C     L2            PLIST                                               
+0007.02 C                   PARM                    QNAME                       
+0007.03 C                   PARM                    LIBNM                       
+0007.04 C                   PARM                    DATALEN                     
+0007.05 C                   PARM                    MSGRCV                      
+0007.06 C                   PARM      -1            WAIT              5 0       
+0008.00 C                   DOW       NOT *IN03                                 
+0009.00 C                   EXFMT     MSGSCR                                    
+0010.00 C                   IF        *IN04                                     
+0012.00 C                   CALL      'QSNDDTAQ'    L1                          
+0013.00 C                   EVAL      MSG=*BLANKS                               
+0014.00 C                   ENDIF                                               
+0014.01 C                   IF        *IN05                                     
+0014.02 C                   CALL      'QRCVDTAQ'    L2                          
+0014.03 C                   ENDIF                                               
+0015.00 C                   ENDDO                                               
+0016.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 QSENDER 
+ FMT D  DName+++++++++++ETDsFrom+++To/L+++IDc.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 DQNAME            S             10A   INZ('KRDTAQ')                     
+0002.00 DQLIBNM           S             10A   INZ('TEN32LIB')                   
+0003.00 DDATALEN          S              5P 0 INZ(50)                           
+0004.00 DDATA             S             50A   INZ('MY FIRST MESSAGE TO DATA QUE 
+0005.00 C     LST           PLIST                                               
+0005.01 C                   PARM                    QNAME                       
+0006.00 C                   PARM                    QLIBNM                      
+0007.00 C                   PARM                    DATALEN                     
+0008.00 C                   PARM                    DATA                        
+0009.00 C                   CALL      'QSNDDTAQ'    LST                         
+0010.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                               QRECEIVER 
+ FMT D  DName+++++++++++ETDsFrom+++To/L+++IDc.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 DQNAME            S             10A   INZ('KRDTAQ')                     
+0002.00 DQLIBNM           S             10A   INZ('TEN32LIB')                   
+0003.00 DDATALEN          S              5P 0 INZ(50)                           
+0004.00 DDATA             S             50A                                     
+0004.01 DWAIT             S              5P 0 INZ(-1)                           
+0005.00 C     LST           PLIST                                               
+0005.01 C                   PARM                    QNAME                       
+0006.00 C                   PARM                    QLIBNM                      
+0007.00 C                   PARM                    DATALEN                     
+0008.00 C                   PARM                    DATA                        
+0008.01 C                   PARM                    WAIT                        
+0009.00 C                   CALL      'QRCVDTAQ'    LST                         
+0009.01 C     DATA          DSPLY                                               
+0010.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+                                                                                
+2.Write a program to get the record format of a file
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                              DSPRCDFMTR 
+ FMT H  HKeywords++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0000.01 HDFTACTGRP(*NO)                                                         
+0001.00 FEMPDSPFFD IF   E             DISK    USROPN                            
+0002.00 FDSPRCDFMTDCF   E             WORKSTN SFILE(RCDFMTSFL:RRN)              
+0003.00 DRRN              S              3P 0 INZ(0)                            
+0004.00 DCMD              S             20A   INZ('DSPFFD FILE(*CURLIB/')       
+0004.01 DFILLSFL          PR                                                    
+0004.02 D                               10A                                     
+0004.03 C                   EVAL      *IN72=*ON                                 
+0005.00 C                   DOW       *IN03=*OFF                                
+0006.00 C                   WRITE     FOOTER                                    
+0007.00 C                   EXFMT     RCDFMTCTL                                 
+0008.00 C   03              LEAVE                                               
+0009.00 C                   CALLP     FILLSFL(FNAME)                            
+0010.00 C                   ENDDO                                               
+0011.00 C                   EVAL      *INLR=*ON                                 
+0012.00 PFILLSFL          B                                                     
+0013.00 DFILLSFL          PI                                                    
+0014.00 DFN                             10A                                     
+0014.01 DCMDTXT           S             80A                                     
+0014.02 DLEN              S             15P 5 INZ(80)                           
+0015.00 C                   EVAL      CMDTXT=CMD+%TRIM(FN)+') OUTPUT(*OUTFILE)  
+0016.00 C                             ' OUTFILE(*CURLIB/EMPDSPFFD) '            
+0017.00 C                   CALL      'QCMDEXC'                                 
+0018.00 C                   PARM                    CMDTXT                      
+0019.00 C                   PARM                    LEN                         
+0020.00 C                   OPEN      EMPDSPFFD                              
+0021.00 C                   EVAL      *IN72=*OFF                               
+0022.00 C                   EVAL      RRN=0                                    
+0023.00 C                   WRITE     RCDFMTCTL                                
+0024.00 C                   READ      EMPDSPFFD                                
+0025.00 C                   DOW       NOT %EOF                                 
+0026.00 C                   EVAL      RRN=RRN+1                                
+0026.01 C                   WRITE     RCDFMTSFL                                
+0027.00 C                   READ      EMPDSPFFD                                
+0028.00 C                   ENDDO                                              
+0029.00 C                   EVAL      *IN72=*ON                                
+0030.00 C                   EVAL      *IN71=*ON                                
+0031.00 C                   IF        RRN>1                                    
+0031.01 C                   EVAL      *IN71=*ON                                
+0031.02 C                   ENDIF                                              
+0031.04 C                   CLOSE     EMPDSPFFD                                
+0031.05 C                   RETURN                                             
+0032.00 PFILLSFL          E                                                    
+****************** End of data **************************************** 

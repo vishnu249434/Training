@@ -1,0 +1,204 @@
+1.Write a ILE program to convert number into words , revert a name and make first letter of 
+name to uppercase using 2 sub procedure and 2 modules.
+
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                ILE1MOD1 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FILE1D     CF   E             WORKSTN                                   
+0002.00 DWA               S             12A   CTDATA DIM(27) PERRCD(1)          
+0003.00 D* PROCEDURE PROTYPES BELOW                                             
+0004.00 DTOWORDS          PR            60A                                     
+0005.00 D                                5S 0                                   
+0006.00 D* REVERT PROC BELOW                                                    
+0007.00 DREVERT           PR            30A                                     
+0008.00 D                               30A                                     
+0009.00 D* PROPER PROC BELOW                                                    
+0010.00 DPROPER           PR            30A                                     
+0011.00 D                               30A                                     
+0011.01 DZNUM             S              5S 0 INZ(*ZEROS)                       
+0012.00 C                   DOW       NOT *IN03                                 
+0013.00 C                   EXFMT     ENTSCR                                    
+0014.00 C   03              LEAVE                   
+0014.02 C                   MOVE      NUM           ZNUM                      
+0015.00 C* CALLS TO EACH PROCEDURE BELOW                                      
+0016.00 C* PARAMETERS PASSED ARE COMING FROM SCREEN INPUT BY USER             
+0017.00 C                   EVAL      WRD=TOWORDS(ZNUM)                       
+0018.00 C                   EVAL      REV=REVERT(NAME)                        
+0019.00 C                   EVAL      PRO=PROPER(NAME)                        
+0020.00 C                   ENDDO                                             
+0021.00 C                   EVAL      *INLR=*ON                               
+0022.00 PTOWORDS          B                        
+0023.00 DTOWORDS          PI            60A                             
+0024.00 DNUM                             5S 0                           
+0025.00 DNUMDS            DS                                            
+0025.01 D* NUMDS=54321 TH=54 THT=5 THU=4 HUN=3 TN=21 TNT=2 TNU=1        
+0026.00 DTH                              2S 0                           
+0027.00 DTHT                             1S 0 OVERLAY(TH:1)             
+0028.00 DTHU                             1S 0 OVERLAY(TH:2)             
+0028.01 DHUN                             1S 0                           
+0028.02 DTN                              2S 0                           
+0028.03 DTNT                             1S 0 OVERLAY(TN:1)               
+0028.04 DTNU                             1S 0 OVERLAY(TN:2)               
+0028.05 D* RETURN CHAR VARIABLE OF 60 DEFINED BELOW                       
+0029.00 DWSTR             S             60A                               
+0030.00 C                   MOVE      NUM           NUMDS                 
+0031.00 C                   IF        TH<21 AND TH>0                      
+0032.00 C                   EVAL      WSTR=%TRIM(WSTR)+%TRIM(WA(TH))+' '+ 
+0032.01 C                             'THOUSAND'                          
+0033.00 C                   ENDIF                                         
+0034.00 C                   IF        TH>20 AND THU>0                          
+0035.00 C                   EVAL      WSTR=%TRIM(WSTR)+%TRIM(WA(THT+18))+' '+  
+0036.00 C                             %TRIM(WA(THU))+' '+'THOUSAND'            
+0037.00 C                   ENDIF                                              
+0038.00 C*                                                                     
+0039.00 C                   IF        TH>20 AND THU=0                          
+0040.00 C                   EVAL      WSTR=%TRIM(WSTR)+%TRIM(WA(THT+18))+' '+  
+0041.00 C                             ' THOUSAND'                              
+0042.00 C                   ENDIF                                              
+0043.00 C                   IF        HUN>0                                    
+0044.00 C                   EVAL      WSTR=%TRIM(WSTR)+' '+%TRIM(WA(HUN))+'  '+
+0044.01 C                             'HUNDRED'                                
+0045.00 C                   ENDIF                                              
+0046.00 C*                                                                     
+0047.00 C                   IF        TN<21 AND TN>0                           
+0048.00 C                   EVAL      WSTR=' '+ %TRIM(WSTR)+%TRIM(WA(TH))      
+0049.00 C                   ENDIF                                              
+0049.01 C                   IF        TN>20 AND TNU>0                          
+0049.02 C                   EVAL      WSTR=%TRIM(WSTR)+' '+%TRIM(WA(TNT+18))+'
+0049.03 C                             %TRIM(WA(TNU))                          
+0049.04 C                   ENDIF                                             
+0054.00 C*                                                                    
+0055.00 C                   IF        TN>20 AND TNU=0                         
+0056.00 C                   EVAL      WSTR=%TRIM(WSTR)+' '+%TRIM(WA(TNT+18))+'
+0057.00 C                                                                     
+0058.00 C                   ENDIF                                             
+0059.00 C                   RETURN    WSTR                                    
+0060.00      PTOWORDS          E                                          
+0061.00 ** CTDATA                                                         
+0062.00 ONE                                                               
+0063.00 TWO                                                               
+0064.00 THREE                                                             
+0065.00 FOUR                                                              
+0066.00 FIVE                                                              
+0067.00 SIX                                                               
+0068.00 SEVEN                                                             
+0069.00 EIGHT    
+0070.00 NINE     
+0071.00 TEN      
+0072.00 ELEVAN   
+0073.00 TWELVE   
+0074.00 THIRTEEN 
+0075.00 FOURTEEN 
+0076.00 FIFTEEN  
+0077.00 SIXTEEN  
+0078.00 SEVENTEEN
+0079.00 EIGHTEEN 
+0080.00 NINETEEN 
+0081.00 TWENTY   
+0082.00 THIRTY   
+0083.00 FORTY    
+0084.00 FIFTY    
+0085.00 SIXTY    
+0086.00 SEVENTY  
+0087.00 EIGHTY                                                                
+0088.00 NINETY                                                                
+        ****************** End of data ***************************************
+                                                                              
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                ILE1MOD2 
+ FMT H  HKeywords++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 HNOMAIN                                                                 
+0002.00 PREVERT           B                   EXPORT                            
+0003.00 DREVERT           PI            30A                                     
+0004.00 DSTR                            30A                                     
+0005.00 DREVNM            S             30A                                     
+0006.00 DPOS              S              2P 0 INZ(30)                           
+0007.00 DCH               S              1A                                     
+0008.00 C                   DOW       POS>0                                     
+0009.00 C                   EVAL      CH=%SUBST(STR:POS:1)                      
+0010.00 C                   EVAL      REVNM=%TRIM(REVNM)+CH                     
+0011.00 C                   EVAL      POS=POS-1                                 
+0012.00 C                   ENDDO                                               
+0013.00 C                   RETURN    REVNM                                     
+0014.00 PREVERT           E                                                     
+0015.00 PPROPER           B                   EXPORT                            
+0016.00 DPROPER           PI            30A                                     
+0017.00 DSTR                            30A                                     
+0017.01 DLW               C                   CONST('abcdefghijklmnopqrstuvwxyz') 
+0017.02 DUP               C                   CONST('ABCDEFGHIJKLMNOPQRSTUVWXYZ') 
+0017.03 DNM1              S             20A                                     
+0017.04 DNM2              S             20A                                     
+0017.05 DNM3              S             20A                                     
+0018.00 DP                S              2P 0                                   
+0019.00 DP1               S              2P 0 INZ(0)                            
+0020.00 DNMTMP            S             20A   
+0021.00 DNMP1             S             20A                  
+0022.00 DNMP2             S             20A                  
+0023.00 DNMP3             S             20A                  
+0023.01 DPROPSTR          S             30A                  
+0024.00 C                   EVAL      P=%SCAN(' ':STR)       
+0025.00 C                   EVAL      NM1=%SUBST(STR:1:P-1)  
+0026.00 C                   EVAL      P1=%CHECK(' ':STR:P)   
+0027.00 C                   EVAL      NMTMP=%SUBST(STR:P1)   
+0028.00 C                   EVAL      P=%SCAN(' ':NMTMP)     
+0029.00 C                   EVAL      NM2=%SUBST(NMTMP:1:P-1)               
+0030.00 C                   EVAL      P1=%CHECK(' ':NMTMP:P)                
+0031.00 C                   EVAL      NM3=%SUBST(NMTMP:P1)                  
+0032.00 C                   EVAL      NMP1=%XLATE(LW:UP:%SUBST(NM1:1:1))+   
+0033.00 C                             %XLATE(UP:LW:%SUBST(NM1:2))           
+0034.00 C*                                                                  
+0035.00 C                   EVAL      NMP2=%XLATE(LW:UP:%SUBST(NM2:1:1))+   
+0036.00 C                             %XLATE(UP:LW:%SUBST(NM2:2))           
+0037.00 C*                                                                  
+0038.00 C                   EVAL      NMP3=%XLATE(LW:UP:%SUBST(NM3:1:1))+      
+0039.00 C                             %XLATE(UP:LW:%SUBST(NM3:2))              
+0040.00 C                   EVAL      PROPSTR=%TRIM(NMP1)+' '+%TRIM(NMP2)+     
+0041.00 C                             ' '+%TRIM(NMP3)                          
+0042.00 C                   RETURN    PROPSTR                                  
+0043.00 PPROPER           E                                                    
+        ****************** End of data ****************************************                                                             
+                                                                                                                 
+2.Write a program to add 2 numbers,but initialzie the parameters in one program	
+and do computation in another program.
+
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 CALLER2 
+ FMT CX CL0N01Factor1+++++++Opcode&ExtExtended-factor2+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0000.01 C                   EVAL      A=100                                     
+0000.02 C                   EVAL      B=150                                     
+0001.00 C                   CALL      'CALLED2'     LST1                        
+0002.00 C     LST1          PLIST                                               
+0003.00 C                   PARM                    A                 3 0       
+0004.00 C                   PARM                    B                 3 0       
+0005.00 C                   PARM                    C                 5 0       
+0006.00 C     C             DSPLY                                               
+0006.01 C                   EVAL      A=50                                      
+0006.02 C                   EVAL      B=80                                      
+0006.03 C                   EVAL      C=0                                       
+0006.04 C                   CALL      'CALLED2'     LST1                        
+0006.05 C     C             DSPLY                                               
+0008.00 C                   SETON                                        LR     
+        ****************** End of data **************************************** 
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC
+ SEU==>                                                                 CALLED2
+ FMT C  CL0N01Factor1+++++++Opcode&ExtFactor2+++++++Result++++++++Len++D+HiLoEq
+        *************** Beginning of data *************************************
+0001.00 C     *ENTRY        PLIST                                              
+0002.00 C                   PARM                    X                 3 0      
+0003.00 C                   PARM                    Y                 3 0      
+0004.00 C                   PARM                    Z                 5 0      
+0005.00 C                   EVAL      Z=X+Y                                    
+0006.00 C     Z             DSPLY                                              
+0007.00 C                   SETON                                        LR    
+        ****************** End of data ****************************************
+                                                                                                          

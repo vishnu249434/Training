@@ -1,0 +1,98 @@
+1.Write a program to entry to employee record and validate.
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 EMPENTR 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FEMPLOYEE  IF A E           K DISK    EXTFILE('TEN32LIB/EMPLOYEE')      
+0002.00 FEMPENTD   CF   E             WORKSTN RENAME(ENTSCR:EMPSCR)             
+0002.01 D* EXPORT - IMPORT IN BOUND MODULES OF ILEPGM                           
+0002.02 D* DATA VALUES ARE AVAILABLE BETWEEN PROGRAMS                           
+0002.03 DMYDS             DS                  EXPORT                            
+0002.04 DNM                             15A                                     
+0002.05 DAMT                             7P 2                                   
+0002.06 C                   EVAL      NM='KARTHIKA'                             
+0002.07 C                   EVAL      AMT=25000                                 
+0003.00 C                   DOW       NOT *INKC                                 
+0004.00 C                   EXFMT     EMPSCR                                    
+0005.00 C   KC              LEAVE                                               
+0006.00 C                                                                       
+0007.00 C                   MOVEA     '000000'      *IN(41)                     
+0008.00 C     EMPID         CHAIN     EREC                                      
+0009.00 C                   IF        %FOUND OR EMPID=0      
+0010.00 C                   EVAL      *IN41=*ON                           
+0011.00 C                   ITER                                          
+0012.00 C                   ENDIF                                         
+0013.00 C                   IF        NAME=*BLANKS                        
+0014.00 C                   EVAL      *IN42=*ON                           
+0015.00 C                   ITER                                          
+0016.00 C                   ENDIF                                         
+0017.00 C                   IF        NOT (%REM(DEPT:2)=0 AND DEPT<60)    
+0018.00 C                   EVAL      *IN43=*ON                           
+0019.00 C                   ITER                                          
+0020.00 C                   ENDIF                                         
+0021.00 C                   IF        NOT(GENDER='M' OR GENDER='F')       
+0022.00 C                   EVAL      *IN44=*ON                           
+0023.00 C                   ITER                                          
+0024.00 C                   ENDIF                                         
+0025.00 C                   IF        SALARY =0                           
+0026.00 C                   EVAL      *IN46=*ON                           
+0027.00 C                   ITER                                          
+0028.00 C                   ENDIF                                  
+0029.00 C                   IF        *INKD                        
+0030.00 C                   WRITE     EREC                         
+0031.00 C                   CLEAR                   EMPSCR         
+0032.00 C                   ENDIF                                  
+0033.00 C                   IF        *INKL                        
+0034.00 C                   CLEAR                   EMPSCR         
+0035.00 C                   ENDIF                                  
+0036.00 C                   ENDDO                                  
+0037.00 C                   EVAL      *INLR='1'                                
+        ****************** End of data ****************************************
+                                                                                                                                                         
+ 2.Write a program to implement a calculator and import the parameters from another
+program
+
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 CALCM1R 
+ FMT FX FFilename++IPEASF.....L.....A.Device+.Keywords+++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 FCALCD     CF   E             WORKSTN                                   
+0002.00 DCOMPUTE          PR             8P 2                                   
+0003.00 D                                3P 0                                   
+0004.00 D                                3P 0                                   
+0005.00 D                                1A                                     
+0006.00 C                   DOW       NOT *IN53                                 
+0007.00 C                   EXFMT     NUMENT                                    
+0008.00 C   53              LEAVE                                               
+0009.00 C                   EVAL      C=COMPUTE(A:B:OPT)                        
+0010.00 C                   ENDDO                                               
+0011.00 C                   EVAL      *INLR=*ON                                 
+        ****************** End of data **************************************** 
+
+ Columns . . . :    6  76            Edit                      TEN32LIB/TRNGSRC 
+ SEU==>                                                                 CALCM2R 
+ FMT H  HKeywords++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+        *************** Beginning of data ************************************* 
+0001.00 HNOMAIN                                                                 
+0002.00 PCOMPUTE          B                   EXPORT                            
+0003.00 DCOMPUTE          PI             8P 2                                   
+0004.00 DX                               3P 0                                   
+0005.00 DY                               3P 0                                   
+0006.00 DCH                              1A                                     
+0007.00 DZ                S              8P 2                                   
+0008.00 C                   SELECT                                              
+0009.00 C                   WHEN      CH='A'                                    
+0010.00 C                   EVAL      Z=X+Y                                     
+0012.00 C                   WHEN      CH='S'                                    
+0013.00 C                   EVAL      Z=X-Y                                     
+0014.00 C                   WHEN      CH='M'                                    
+0015.00 C                   EVAL      Z=X*Y                                     
+0016.00 C                   WHEN      CH='D'                                    
+0017.00 C                   EVAL      Z=X/Y        
+0018.00 C                   ENDSL                                              
+0019.00 C                   RETURN    Z                                        
+0020.00 PCOMPUTE          E                                                    
+        ****************** End of data ****************************************
+                                                                                                                              
